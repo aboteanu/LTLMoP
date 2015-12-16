@@ -16,21 +16,12 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 #  int32_t num_state_bodies;
 #  state_body_msg_t state_bodies[ num_state_bodies ];
 
-	def object_handler(self, object_type, object_color, initial=False):
-		if initial:
-			return False
-		try:
-			if not self.RocbotInitHandler.state_message:
-				return False
-			# iterate through the list of bodies and compare with input type/color
-			for obj in self.RocbotInitHandler.state_message.state_bodies:
-				print 'state object', obj
-				# TODO compare w/ inputs
-		except Exception, e:
-				print "Error msg %s" % (str(e))
-		return False
-
 	def sensor_handler(self, sensor_type, object_list, initial=False):
+		'''
+		types defined in ltl_h2sl symbols
+		sensor_type - string
+		object_list - list of dict {'obj_type':'TYPE', 'obj_color':'COLOR'}
+		'''
 		if initial:
 			return False
 		try:
@@ -60,6 +51,6 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 				print 'Unknown sensor type', sensor_type
 				pass
 		except Exception, e:
-				print "Error msg %s" % (str(e))
+			print "Error msg %s" % (str(e))
 		return False
 

@@ -7,11 +7,11 @@ from rocbot import *
 import lcm 
 
 class RocbotInitHandler(handlerTemplates.InitHandler):
-	def __init__(self):
+	def __init__(self, executor):
 		# start lcm
 		self.lc = lcm.LCM()
         	# subscribe to world state channel
-		self.subscription = lc.subscribe( "STATE_MODEL_ROCBOT", world_state_handler )
+		self.subscription = self.lc.subscribe( "STATE_MODEL_ROCBOT", self.world_state_handler )
 
 		self.state_message = None
 
@@ -21,10 +21,9 @@ class RocbotInitHandler(handlerTemplates.InitHandler):
 		except KeyboardInterrupt:
 			pass
 
-	def world_state_handler( channel, data ):
+	def world_state_handler( self, channel, data ):
 		self.state_message = state_model_msg_t.decode(data)
-		print "Received state message on channel", channel, " message_id ", self.state_message.id
-		print ""
+		#print self.state_message.id
 
 	def getSharedData(self):
 		return { "ROCBOT_INIT_HANDLER" : self }
