@@ -24,7 +24,7 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"OBJECT_COLOR_RED" : "red",
 		"OBJECT_COLOR_BLUE" : "blue",
 		"OBJECT_COLOR_GREEN" : "green",
-		"na", "na"
+		"na": "na"
 		}
 
 # state message format
