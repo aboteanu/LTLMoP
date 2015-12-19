@@ -4,6 +4,9 @@ import sys
 
 import lib.handlers.handlerTemplates as handlerTemplates
 
+import lcm
+
+
 class RocbotSensorHandler(handlerTemplates.SensorHandler):
 	def __init__(self, executor, shared_data):
 		self.RocbotInitHandler = shared_data['ROCBOT_INIT_HANDLER']
@@ -27,6 +30,13 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"na": "na"
 		}
 
+                # start lcm
+                self.lc = lcm.LCM()
+                # subscribe to world state channel
+                self.subscription = self.lc.subscribe( "STATE_MODEL_ROCBOT", self.world_state_handler )
+                self.state_message = dict()
+
+
 # state message format
 #  int64_t timestamp;
 #  string id;
@@ -35,11 +45,28 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 #  int32_t num_state_bodies;
 #  state_body_msg_t state_bodies[ num_state_bodies ];
 
+        def world_state_handler( self, channel, data ):
+		"""
+		Handler for rocbot LCM state messages
+
+		channel (string): lcm channel name
+		data (dict): data message read on the channel
+		"""
+                msg = state_model_msg_t.decode(data)
+		return msg
 
 	def listen_for_state(self):
 		try:
-			for i in range(10): # this should be a the number of objects in the world
-				self.RocbotInitHandler.lc.handle()
+			# clear old data
+			self.state_message = dict()
+			while True:
+				self.lc.handle()
+				# stop when message keys start repeating i.e. we have all objects
+				if msg.id in self.state_message:
+					break
+				self.state_message[msg.id] = msg
+			print '#### listened and got', self.state_message.keys()
+				
                 except KeyboardInterrupt:
                         pass
 
@@ -52,7 +79,9 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		try:
+			listen_for_state()
 			print '#', self.RocbotInitHandler.keys()
+			return True
 		except:
 			pass
 			
@@ -67,6 +96,7 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		try:
+			listen_for_state()
 			print self.RocbotInitHandler.keys()
 		except:
 			pass
@@ -82,6 +112,7 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		try:
+			listen_for_state()
 			print self.RocbotInitHandler.keys()
 		except:
 			pass
@@ -97,6 +128,7 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		try:
+			listen_for_state()
 			print self.RocbotInitHandler.keys()
 		except:
 			pass
@@ -116,6 +148,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		try:
+			listen_for_state()
+			print '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
 			print self.RocbotInitHandler.keys()
 		except:
 			pass
@@ -135,6 +169,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		try:
+			listen_for_state()
+			print '###################'
 			print self.RocbotInitHandler.keys()
 		except:
 			pass
@@ -154,6 +190,7 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		try:
+			listen_for_state()
 			print self.RocbotInitHandler.keys()
 		except:
 			pass
@@ -173,6 +210,7 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		try:
+			listen_for_state()
 			print self.RocbotInitHandler.keys()
 		except:
 			pass
