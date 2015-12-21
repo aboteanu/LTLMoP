@@ -80,6 +80,20 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 				return obj_type
 		return None
 
+	def _matching_objects( self, object_type, object_color="na" ):
+		"""
+		yield matching objects
+
+		object_type (string): ltl_h2sl object type
+		object_color (string): ltl_h2sl object color
+		"""
+		for msg_id in self.recent_state:
+			for sb in self.recent_state[msg_id].state_bodies:
+				if object_type == "na":
+					yield ( (msg_id, sb) )
+				elif ( object_type == self.id_to_type( sb.id ) ): # TODO test color
+					yield ( (msg_id, sb) )
+
 	def matching_objects(self, object_type, object_color="na"):
 		"""
 		Return a list of all state messages in the message list
@@ -89,55 +103,62 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		object_color (string): ltl_h2sl object color
 		"""
 		result = list()
-		for msg_id in self.recent_state:
-			for sb in self.recent_state[msg_id].state_bodies:
-				if ( object_type == self.id_to_type( sb.id ) ): # and TODO test color?
-					result.append( ( msg_id, sb ) )
+		for i in self._matching_objects( object_type, object_color ):
+			if i is not None:
+				result.append( i )
 		return result	
 
-	# TODO
 	def sensor_type_observed(self, object_type, object_color, initial=False):
 		"""
 		object_type (string): must be in self.object_types
 		object_color (string): must be in self.object_colors
 		"""
-		return False
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'right' )
+		for i in self._matching_object( object_type, object_color ):
+			if i is not None:
+				return True
+		return False
 
-	# TODO
 	def sensor_type_covered(self, object_type, object_color, initial=False):
 		"""
 		object_type (string): must be in self.object_types
 		object_color (string): must be in self.object_colors
 		"""
-		return False
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'right' )
+		# all objects that the input argument is under
+		for ( msg_id, sb ) in self.test_spatial_relation( object_type, object_color, "na", "na", 'under' ):
+			if 'baxter' in sb:
+				continue # ignore the robot
+			# TODO limit to a perimeter around the object, not anything in the world
+			else:
+				return True
+		return False
 
-	# TODO
 	def sensor_type_clear(self, object_type, object_color, initial=False):
 		"""
 		object_type (string): must be in self.object_types
 		object_color (string): must be in self.object_colors
 		"""
-		return False
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'right' )
+		# all objects that the input argument is under
+		for ( msg_id, sb ) in self.test_spatial_relation( object_type, object_color, "na", "na", 'under' ):
+			if 'baxter' in sb:
+				continue # ignore the robot
+			# TODO limit to a perimeter around the object, not anything in the world
+			else:
+				return False
+		return True 
 
-	# TODO
 	def sensor_type_full(self, object_type, object_color, initial=False):
 		"""
 		object_type (string): must be in self.object_types
 		object_color (string): must be in self.object_colors
 		"""
-		return False
-		if initial:
-			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'right' )
+		# TODO distinguish between containing an object and just having something above/covering it
+		return self.sensor_type_covered( object_type, object_color, initial )
 
 	def sensor_type_left(self, object_type1, object_color1, object_type2, object_color2, initial=False):
 		"""
@@ -216,6 +237,19 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'above' )
+
+	# TODO
+	def sensor_type_object_in_gripper( self, object_type, object_color, gripper ):
+		"""
+		Test if an object given by (type, color) is in the gripper ( values "left" or "right" )
+
+		object_type (string): must be in self.object_types
+		object_color (string): must be in self.object_colors
+		gripper (string): possible values "left" or "right"
+		"""
+		if initial:
+			return False
+		return False
 
 	def test_spatial_relation( self, object_type1, object_color1, object_type2, object_color2, test ):
 		"""

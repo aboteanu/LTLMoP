@@ -1,12 +1,18 @@
 import lib.handlers.handlerTemplates as handlerTemplates
+import time
 
 class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
 		self.rocbotInitHandler = shared_data["ROCBOT_INIT_HANDLER"]
 
 		self.action_types = {
-			"ACTION_TYPE_PLACE" : "place"
-		}
+			"ACTION_TYPE_PLACE" : "place",
+			"ACTION_TYPE_DROP" : "drop",
+			"ACTION_TYPE_INSERT" : "insert",
+			"ACTION_TYPE_PLACE" : "place",
+			"ACTION_TYPE_INTERVENTION" : "intervention",
+			"na" : "na"
+			}
 
 		def action_dispatch( action_type, objects, initial=False):
 			"""
@@ -16,9 +22,7 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 			object_type (str): object type
 			object_color (str): object color
 			"""
-			return
-
-			timestamp = 0
+			timestamp = int(time.time())
 			object_list=list()
 			for obj in objects:
 				object_msg = object_msg_t()
