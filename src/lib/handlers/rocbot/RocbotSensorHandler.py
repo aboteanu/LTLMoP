@@ -251,6 +251,19 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 			return False
 		return False
 
+	# TODO
+	def sensor_type_object_in_workspace( self, object_type, object_color, gripper ):
+		"""
+		Test if an object given by (type, color) is in the workspace of the gripper ( values "left" or "right" )
+
+		object_type (string): must be in self.object_types
+		object_color (string): must be in self.object_colors
+		gripper (string): possible values "left" or "right"
+		"""
+		if initial:
+			return False
+		return False
+
 	def test_spatial_relation( self, object_type1, object_color1, object_type2, object_color2, test ):
 		"""
 		object_type1 (string): must be in self.object_types

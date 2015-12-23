@@ -10,6 +10,7 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 			"ACTION_TYPE_DROP" : "drop",
 			"ACTION_TYPE_INSERT" : "insert",
 			"ACTION_TYPE_PLACE" : "place",
+			"ACTION_TYPE_HANDOFF" : "handoff",
 			"ACTION_TYPE_INTERVENTION" : "intervention",
 			"na" : "na"
 			}
