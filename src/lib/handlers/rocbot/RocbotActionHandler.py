@@ -6,13 +6,13 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 		self.rocbotInitHandler = shared_data["ROCBOT_INIT_HANDLER"]
 
 		self.action_types = {
-			"ACTION_TYPE_PLACE" : "place",
-			"ACTION_TYPE_DROP" : "drop",
-			"ACTION_TYPE_INSERT" : "insert",
-			"ACTION_TYPE_PLACE" : "place",
-			"ACTION_TYPE_HANDOFF" : "handoff",
-			"ACTION_TYPE_INTERVENTION" : "intervention",
-			"na" : "na"
+			"ACTION_TYPE_UNKNOWN" : [ 0, "na"],
+			"ACTION_TYPE_PICKUP" : [ 1, "pickup", "take"],
+			"ACTION_TYPE_DROP" : [ 2, "drop" ],
+			"ACTION_TYPE_INSERT" : [ 3, "insert" ],
+			"ACTION_TYPE_PLACE" : [ 4, "place" ],
+			"ACTION_TYPE_HANDOFF" : [ 5, "handoff" ],
+			"ACTION_TYPE_INTERVENTION" : [ 6, "help", "intervention" ]
 			}
 
 		def action_dispatch( action_type, objects, initial=False):
@@ -34,7 +34,7 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 			
 			action_msg = action_msg_t()
 			action_msg.timestamp = timestamp
-			action_msg.action_type = action_type
+			action_msg.action_type = action_types[ action_type][0]
 			action_msg.object_num = 1+len(objects_list)
 			action_msg.objects = object_list
 

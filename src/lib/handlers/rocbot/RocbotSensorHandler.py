@@ -141,11 +141,10 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		# all objects that the input argument is under
-		for ( msg_id, sb ) in self.test_spatial_relation( object_type, object_color, "na", "na", 'under' ):
-			if 'baxter' in sb:
-				continue # ignore the robot
-			else:
-				return True
+		for ( msg_id, sb ) in self.test_spatial_relation( object_type1=object_type, object_color1=object_color, 
+					object_type2="na", object_color2="na", 
+					test="under", min_threshold=0, max_threshold=100, exclude=["baxter"] ):
+			return True
 		return False 
 
 	def sensor_type_clear(self, object_type, object_color, initial=False):
@@ -156,11 +155,10 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		# all objects that the input argument is under
-		for ( msg_id, sb ) in self.test_spatial_relation( object_type, object_color, "na", "na", 'above' ):
-			if 'baxter' in sb:
-				continue # ignore the robot
-			else:
-				return False #TODO
+		for ( msg_id, sb ) in self.test_spatial_relation( object_type1=object_type, object_color1=object_color, 
+					object_type2="na", object_color2="na", 
+					test="above", min_threshold=0, max_threshold=100, exclude=["baxter"] ):
+				return False 
 		return True 
 
 	def sensor_type_full(self, object_type, object_color, initial=False):
@@ -181,7 +179,9 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'left' )
+		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
+					object_type2=object_type2, object_color2=object_color2, 
+					test="left", min_threshold=.01, max_threshold=100, exclude=[] )
 
 	def sensor_type_right(self, object_type1, object_color1, object_type2, object_color2, initial=False):
 		"""
@@ -194,7 +194,9 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'right' )
+		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
+					object_type2=object_type2, object_color2=object_color2, 
+					test="right", min_threshold=.01, max_threshold=100, exclude=[] )
 
 	def sensor_type_front(self, object_type1, object_color1, object_type2, object_color2, initial=False):
 		"""
@@ -207,7 +209,9 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'front' )
+		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
+					object_type2=object_type2, object_color2=object_color2, 
+					test="front", min_threshold=.01, max_threshold=100, exclude=[] )
 
 	def sensor_type_back(self, object_type1, object_color1, object_type2, object_color2, initial=False):
 		"""
@@ -220,7 +224,9 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'back' )
+		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
+					object_type2=object_type2, object_color2=object_color2, 
+					test="back", min_threshold=.01, max_threshold=100, exclude=[] )
 
 	def sensor_type_under(self, object_type1, object_color1, object_type2, object_color2, initial=False):
 		"""
@@ -233,7 +239,9 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'under' )
+		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
+					object_type2=object_type2, object_color2=object_color2, 
+					test="under", min_threshold=.01, max_threshold=100, exclude=[] )
 
 	def sensor_type_above(self, object_type1, object_color1, object_type2, object_color2, initial=False):
 		"""
@@ -246,7 +254,9 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1, object_color1, object_type2, object_color2, 'above' )
+		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
+					object_type2=object_type2, object_color2=object_color2, 
+					test="above", min_threshold=.01, max_threshold=100, exclude=[] )
 
 	def sensor_type_object_in_gripper( self, object_type, object_color, gripper ):
 		"""
@@ -259,9 +269,13 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		if initial:
 			return False
 		if gripper == "left":
-			return test_spatial_relation( object_type, object_color, "OBJECT_TYPE_ROBOT_LEFT_HAND", "na", "near", 0.1 )
+			return self.test_spatial_relation( object_type1=object_type, object_color1=object_color, 
+					object_type2="OBJECT_TYPE_ROBOT_LEFT_HAND", object_color2="na", 
+					test="near", min_threshold=.01, max_threshold=0.1, exclude=[] )
 		else:
-			return test_spatial_relation( object_type, object_color, "OBJECT_TYPE_ROBOT_RIGHT_HAND", "na", "near", 0.1 )
+			return self.test_spatial_relation( object_type1=object_type, object_color1=object_color, 
+					object_type2="OBJECT_TYPE_ROBOT_RIGHT_HAND", object_color2="na", 
+					test="near", min_threshold=.01, max_threshold=0.1, exclude=[] )
 
 	def sensor_type_object_in_workspace( self, object_type, object_color, gripper ):
 		"""
@@ -273,9 +287,13 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type, object_color, "OBJECT_TYPE_ROBOT_TORSO", "na", "near", 0.4 )
+		return self.test_spatial_relation( object_type1=object_type, object_color1=object_color, 
+					object_type2="OBJECT_TYPE_ROBOT_TORSO", object_color2="na", 
+					test="near", min_threshold=0.0, max_threshold=0.4, exclude=[] )
 
-	def test_spatial_relation( self, object_type1, object_color1, object_type2, object_color2, test, threshold = 0 ):
+	def test_spatial_relation( self, object_type1, object_color1, 
+				object_type2, object_color2, 
+				test, min_threshold = 0, max_threshold=100, exclude=[] ):
 		"""
 		object_type1 (string): must be in self.object_types
 		object_color1 (string): must be in self.object_colors
@@ -294,6 +312,9 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		# return at the first positive
 		for (msg_id1, body1)  in obj1:
 			for (msg_id2, body2) in obj2:
+				if obj1[0] in exclude or obj2[0] in exclude:
+					continue
+
 				position1 = body1.pose.position
 				position2 = body2.pose.position
 		
@@ -304,20 +325,23 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 				# y + : left of baxter
 				# z + : up
 				if test == 'right':
-					return y1 < y2 + threshold
+					return y1 < y2 + min_threshold
 				elif test == 'left':
-					return y1 > y2 + threshold
+					return y1 > y2 + min_threshold
 				elif test == 'front':
-					return x1 > x2 + threshold
+					return x1 > x2 + min_threshold
 				elif test == 'back':
-					return x1 < x2 + threshold
+					return x1 < x2 + min_threshold
 				elif test == 'above':
-					return z1 > z2 + threshold
+					return z1 > z2 + min_threshold
 				elif test == 'under':
-					return z1 < z2 + threshold
+					return z1 < z2 + min_threshold
 				elif test == 'near':
-					return self.distance_coord( 
+					return ( ( self.distance_coord( 
 						(x1,y1,z1), (x2,y2,z2)	
-						) < threshold
+						) < max_threshold ) and
+						( self.distance_coord( 
+						(x1,y1,z1), (x2,y2,z2)	
+						) > min_threshold ) )
 
 		return False
