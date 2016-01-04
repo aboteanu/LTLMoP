@@ -2,8 +2,9 @@ import threading, subprocess, os, time, socket
 import numpy, math
 import sys
 import math
-
 import lcm
+
+import ltl_h2sl_symbols
 from rocbot import state_model_msg_t
 
 import lib.handlers.handlerTemplates as handlerTemplates
@@ -14,32 +15,13 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 	def __init__(self, executor, shared_data):
 		self.RocbotInitHandler = shared_data['ROCBOT_INIT_HANDLER']
 
-		self.object_types = {
-			"OBJECT_TYPE_UNKNOWN" : [ 0, "na" ],
-			"OBJECT_TYPE_CUBE" : [ 1, "cube"],
-			"OBJECT_TYPE_U_BLOCK" : [ 2, "left u-blueu-blueu-center", "right u-redu-redu-center"],
-			"OBJECT_TYPE_HOLDER" : [ 3, "ubar-ubar-ubar-6"],
-			"OBJECT_TYPE_BIN" : [ 4, "bin"],
-			"OBJECT_TYPE_TRAY" : [ 5, "tray"],
-			"OBJECT_TYPE_TABLE" : [ 6, "table"],
-			"OBJECT_TYPE_ROBOT_TORSO" : [ 7, "baxter-baxter-torso"],
-			"OBJECT_TYPE_ROBOT_LEFT_HAND" : [ 8, "baxter-baxter-right_gripper"],
-			"OBJECT_TYPE_ROBOT_RIGHT_HAND" : [ 9, "baxter-baxter-left_gripper"],
-		}
-		
-
-		self.object_color = {
-			"OBJECT_COLOR_UNKNOWN" : [ 0, "na" ],
-			"OBJECT_COLOR_RED" : [ 1, "red"],
-			"OBJECT_COLOR_BLUE" : [ 2, "blue"],
-			"OBJECT_COLOR_GREEN" : [ 3, "green"],
-		}
-
                 # start lcm
                 self.lc = lcm.LCM()
                 # subscribe to world state channel
                 self.subscription = self.lc.subscribe( "STATE_MODEL_ROCBOT", RocbotSensorHandler.world_state_handler )
 		self.recent_state = dict()
+		
+		print 'RocbotSensorHandler'
 
 # state message format
 #  int64_t timestamp;
@@ -77,8 +59,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 
 		msg_id (string): id string as returned in the lcm message type
 		"""
-		for obj_type in self.object_types:
-			if msg_id in self.object_types[ obj_type ]:
+		for obj_type in ltl_h2sl_symbols.object_types:
+			if msg_id in ltl_h2sl_symbols.object_types[ obj_type ]:
 				return obj_type
 		return None
 
@@ -123,8 +105,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 
 	def sensor_type_observed(self, object_type, object_color, initial=False):
 		"""
-		object_type (string): must be in self.object_types
-		object_color (string): must be in self.object_colors
+		object_type (string): must be in object_types
+		object_color (string): must be in object_colors
 		"""
 		if initial:
 			return False
@@ -135,8 +117,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 
 	def sensor_type_covered(self, object_type, object_color, initial=False):
 		"""
-		object_type (string): must be in self.object_types
-		object_color (string): must be in self.object_colors
+		object_type (string): must be in object_types
+		object_color (string): must be in object_colors
 		"""
 		if initial:
 			return False
@@ -149,8 +131,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 
 	def sensor_type_clear(self, object_type, object_color, initial=False):
 		"""
-		object_type (string): must be in self.object_types
-		object_color (string): must be in self.object_colors
+		object_type (string): must be in object_types
+		object_color (string): must be in object_colors
 		"""
 		if initial:
 			return False
@@ -163,8 +145,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 
 	def sensor_type_full(self, object_type, object_color, initial=False):
 		"""
-		object_type (string): must be in self.object_types
-		object_color (string): must be in self.object_colors
+		object_type (string): must be in object_types
+		object_color (string): must be in object_colors
 		"""
 		return self.sensor_type_covered( object_type, object_color, initial )
 
@@ -172,10 +154,10 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		object 1 is relative to object 2 
 
-		object_type1 (string): must be in self.object_types
-		object_color1 (string): must be in self.object_colors
-		object_type2 (string): must be in self.object_types
-		object_color2 (string): must be in self.object_colors
+		object_type1 (string): must be in object_types
+		object_color1 (string): must be in object_colors
+		object_type2 (string): must be in object_types
+		object_color2 (string): must be in object_colors
 		"""
 		if initial:
 			return False
@@ -187,10 +169,10 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		object 1 is relative to object 2 
 
-		object_type1 (string): must be in self.object_types
-		object_color1 (string): must be in self.object_colors
-		object_type2 (string): must be in self.object_types
-		object_color2 (string): must be in self.object_colors
+		object_type1 (string): must be in object_types
+		object_color1 (string): must be in object_colors
+		object_type2 (string): must be in object_types
+		object_color2 (string): must be in object_colors
 		"""
 		if initial:
 			return False
@@ -202,10 +184,10 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		object 1 is relative to object 2 
 
-		object_type1 (string): must be in self.object_types
-		object_color1 (string): must be in self.object_colors
-		object_type2 (string): must be in self.object_types
-		object_color2 (string): must be in self.object_colors
+		object_type1 (string): must be in object_types
+		object_color1 (string): must be in object_colors
+		object_type2 (string): must be in object_types
+		object_color2 (string): must be in object_colors
 		"""
 		if initial:
 			return False
@@ -217,10 +199,10 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		object 1 is relative to object 2 
 
-		object_type1 (string): must be in self.object_types
-		object_color1 (string): must be in self.object_colors
-		object_type2 (string): must be in self.object_types
-		object_color2 (string): must be in self.object_colors
+		object_type1 (string): must be in object_types
+		object_color1 (string): must be in object_colors
+		object_type2 (string): must be in object_types
+		object_color2 (string): must be in object_colors
 		"""
 		if initial:
 			return False
@@ -232,10 +214,10 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		object 1 is relative to object 2 
 
-		object_type1 (string): must be in self.object_types
-		object_color1 (string): must be in self.object_colors
-		object_type2 (string): must be in self.object_types
-		object_color2 (string): must be in self.object_colors
+		object_type1 (string): must be in object_types
+		object_color1 (string): must be in object_colors
+		object_type2 (string): must be in object_types
+		object_color2 (string): must be in object_colors
 		"""
 		if initial:
 			return False
@@ -247,10 +229,10 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		object 1 is relative to object 2 
 
-		object_type1 (string): must be in self.object_types
-		object_color1 (string): must be in self.object_colors
-		object_type2 (string): must be in self.object_types
-		object_color2 (string): must be in self.object_colors
+		object_type1 (string): must be in object_types
+		object_color1 (string): must be in object_colors
+		object_type2 (string): must be in object_types
+		object_color2 (string): must be in object_colors
 		"""
 		if initial:
 			return False
@@ -262,8 +244,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		Test if an object given by (type, color) is in the gripper ( values "left" or "right" )
 
-		object_type (string): must be in self.object_types
-		object_color (string): must be in self.object_colors
+		object_type (string): must be in object_types
+		object_color (string): must be in object_colors
 		gripper (string): possible values "left" or "right"
 		"""
 		if initial:
@@ -281,8 +263,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		Test if an object given by (type, color) is in the workspace of the gripper ( values "left" or "right" ), do this by testing if it is within a set distance from the robot's body.
 
-		object_type (string): must be in self.object_types
-		object_color (string): must be in self.object_colors
+		object_type (string): must be in object_types
+		object_color (string): must be in object_colors
 		gripper (string): possible values "left" or "right"
 		"""
 		if initial:
@@ -295,12 +277,14 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 				object_type2, object_color2, 
 				test, min_threshold = 0, max_threshold=100, exclude=[] ):
 		"""
-		object_type1 (string): must be in self.object_types
-		object_color1 (string): must be in self.object_colors
-		object_type2 (string): must be in self.object_types
-		object_color2 (string): must be in self.object_colors
+		object_type1 (string): must be in object_types
+		object_color1 (string): must be in object_colors
+		object_type2 (string): must be in object_types
+		object_color2 (string): must be in object_colors
 		test (string) : type of test
-		threshold (float) : add to the second object's position 
+		min_threshold (float) : at least this far in one dimension
+		max_threshold (float) : limit distance for 'near' tests
+		exclude (list) : list of object names that will be ignored in matching_objects results
 		"""
 		self.recent_state = self.listen_for_state()
 		# find all objects that match the type and color 

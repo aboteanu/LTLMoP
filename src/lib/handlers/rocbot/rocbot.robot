@@ -10,3 +10,5 @@ rocbot.RocbotInitHandler()
 SensorHandler: # Rocbot simulator world state, triggers sensors
 rocbot.RocbotSensorHandler()
 
+ActuatorHandler:
+rocbot.RocbotActionHandler()

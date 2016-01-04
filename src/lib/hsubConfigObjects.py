@@ -110,7 +110,7 @@ class MethodParameterConfig(object):
                            [(k, int) for k in ('integer', 'int', 'choice')] +
                            [(k, bool) for k in ('bool', 'boolean', 'choice')] +
                            [(k, basestring) for k in ('region', 'str', 'string', 'choice')] +
-                           [(k, list) for k in ('multichoice',)])
+                           [(k, list) for k in ('list', 'multichoice',)])
 
         if not isinstance(value, valid_types[self.para_type.lower()]):
             raise ValueError("Invalid {} value: {!r} for parameter {!r}".format(self.para_type, value, self.name))

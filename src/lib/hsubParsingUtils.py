@@ -49,7 +49,9 @@ def parseCallString(text, mode="single", make_call_function=None):
 
         Example:
         >>> parseCallString("a.b(c=1, d=2)")
-        ([CallDescriptor(name=['a', 'b'], args={'c': 1, 'd': 2}, start_pos=0, end_pos=12)], None)
+        ([CallDescriptor(name=['a', 'b'], args={'c': 1, 'd': 2}, start_pos=0, end_pos=13)], None)
+        >>> parseCallString("a.b(c='aaa', d=[ ('a1','a2'), ('b1','b2') ] )")
+        ([CallDescriptor(name=['a', 'b'], args={'c': 'aaa', 'd': [('a1', 'a2'), ('b1', 'b2')]}, start_pos=0, end_pos=45)], None)
     """
 
     # Parse into AST
