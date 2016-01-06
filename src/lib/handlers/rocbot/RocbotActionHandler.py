@@ -3,7 +3,10 @@ import time
 import lcm
 
 import ltl_h2sl_symbols
-from ltl_h2sl import object_msg_t, action_msg_t
+from ltl_h2sl import object_msg_t, action_msg_t, action_outcome_msg_t
+
+action_outcome_msg = None
+action_msg_timestamp = None
 
 class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
@@ -11,7 +14,22 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 
 		self.lc = lcm.LCM()
 
+		self.lc.subscribe( "ACTION_OUTCOME_ROCBOT",
+				RocbotActionHandler.action_outcome_handler
+				) #TODO channel name
+
 		print 'RocbotActuatorHandler'
+
+	@staticmethod
+	def action_outcome_handler( channel, data ):
+		"""
+		Handles action message responses from the simulator
+
+		channel (string): channel name
+		data (dict): message data
+		"""
+		global action_outcome_msg
+		action_outcome_msg = action_outcome_msg_t.decode( data )
 
 	def action_dispatch( self, action_type, objects, actuatorVal, initial=False):
 		"""
@@ -26,9 +44,10 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 		for obj in objects:
 			object_msg = object_msg_t()
 			object_msg.timestamp = timestamp
-			object_msg.object_type = ltl_h2sl_symbols.object_types[ obj[0] ][0] 
-			object_msg.object_color = ltl_h2sl_symbols.object_colors[ obj[1] ][0] 
-			object_list.append(object_msg)#.encode())
+			object_msg.object_id = obj[0]
+			object_msg.object_type = ltl_h2sl_symbols.object_types[ obj[1] ][0] 
+			object_msg.object_color = ltl_h2sl_symbols.object_colors[ obj[2] ][0] 
+			object_list.append(object_msg)
 		
 		action_msg = action_msg_t()
 		action_msg.timestamp = timestamp
@@ -37,5 +56,22 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 		action_msg.object_num = len(object_list)
 		action_msg.objects = object_list
 
+		global action_msg_timestamp
+		action_msg_timestamp = timestamp
+
 		self.lc.publish("ACTION_SM_ROCBOT", action_msg.encode() )
 
+		k=0
+		while True:
+			time.sleep(0.1)
+			self.lc.handle()
+			if action_outcome_msg is not None and 
+				action_outcome_msg["request_timestamp"] == action_msg_timestamp:
+				result = action_outcome_msg["result"]
+				action_outcome_msg = None
+				return result
+			elif k < 3:
+                        # TODO increase this value once the sim is sending messages; wait for 20s at most
+				k+=1
+			else: 
+				return False

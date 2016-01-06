@@ -76,7 +76,7 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 				if object_type == "na":
 					yield ( (msg_id, sb) )
 				elif ( object_type == self.id_to_type( sb.id ) ): # TODO test color
-					yield ( (msg_id, sb) )
+					yield ( (msg_id, object_type, sb) )
 
 	def matching_objects(self, object_type, object_color="na"):
 		"""
@@ -294,8 +294,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 
 		# for all possible pairs, test if the relation holds 
 		# return at the first positive
-		for (msg_id1, body1)  in obj1:
-			for (msg_id2, body2) in obj2:
+		for (msg_id1, type1, body1)  in obj1:
+			for (msg_id2, type2, body2) in obj2:
 				if obj1[0] in exclude or obj2[0] in exclude:
 					continue
 
@@ -305,21 +305,18 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 				x1,y1,z1 = position1.data
 				x2,y2,z2 = position2.data
 				# object 1 relative to object 2
-				# x + : out of the screen
-				# y + : left of baxter
-				# z + : up
 				if test == 'right':
-					return y1 < y2 + min_threshold
-				elif test == 'left':
 					return y1 > y2 + min_threshold
+				elif test == 'left':
+					return y1 < y2 + min_threshold
 				elif test == 'front':
-					return x1 > x2 + min_threshold
-				elif test == 'back':
 					return x1 < x2 + min_threshold
+				elif test == 'back':
+					return x1 > x2 + min_threshold
 				elif test == 'above':
-					return z1 > z2 + min_threshold
-				elif test == 'under':
 					return z1 < z2 + min_threshold
+				elif test == 'under':
+					return z1 > z2 + min_threshold
 				elif test == 'near':
 					return ( ( self.distance_coord( 
 						(x1,y1,z1), (x2,y2,z2)	
