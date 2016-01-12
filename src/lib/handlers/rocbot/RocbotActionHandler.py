@@ -6,10 +6,11 @@ import ltl_h2sl_symbols
 from ltl_h2sl import object_msg_t, action_msg_t, action_outcome_msg_t
 
 action_outcome_msg = None
-action_msg_timestamp = None
 
 class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
+		self.last_action_id = 0
+
 		self.rocbotInitHandler = shared_data["ROCBOT_INIT_HANDLER"]
 
 		self.lc = lcm.LCM()
@@ -48,8 +49,10 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 			object_msg.object_type = ltl_h2sl_symbols.object_types[ obj[1] ][0] 
 			object_msg.object_color = ltl_h2sl_symbols.object_colors[ obj[2] ][0] 
 			object_list.append(object_msg)
-		
+	
+		self.last_action_id += 1	
 		action_msg = action_msg_t()
+		action_msg = self.last_action_id
 		action_msg.timestamp = timestamp
 		action_msg.invert = not actuatorVal
 		action_msg.action_type = ltl_h2sl_symbols.action_types[ action_type][0]
@@ -66,7 +69,7 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 			time.sleep(0.1)
 			self.lc.handle()
 			if action_outcome_msg is not None and 
-				action_outcome_msg["request_timestamp"] == action_msg_timestamp:
+				action_outcome_msg["action_id"] == self.last_action_id:
 				result = action_outcome_msg["result"]
 				action_outcome_msg = None
 				return result
