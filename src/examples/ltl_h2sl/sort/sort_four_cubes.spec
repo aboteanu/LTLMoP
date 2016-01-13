@@ -23,7 +23,7 @@ fastslow: False
 decompose: True
 
 CurrentConfigName:
-rocbot
+simulation
 
 Customs: # List of custom propositions
 right_gripper
@@ -44,29 +44,27 @@ RegionMapping: # Mapping between region names and their decomposed counterparts
 others = p1
 
 Spec: # Specification in structured English
-robot starts with false
+do pickup_blue_left if and only if you are sensing blue_left and you are not activating left_gripper
+do pickup_blue_right if and only if you are sensing blue_right and you are not activating left_gripper
+do pickup_red_left if and only if you are sensing red_left and you are not activating right_gripper
+do pickup_red_right if and only if you are sensing red_right and you are not activating right_gripper
 
-# how to pickup
-left_gripper is set on pickup_blue_right or pickup_blue_left and reset on drop_left
-right_gripper is set on pickup_red_right or pickup_red_left and reset on drop_right
+do drop_left if and only if you are activating left_gripper and you are sensing left_bin_clear
+do drop_right if and only if you are activating right_gripper and you are sensing right_bin_clear
 
-if you are sensing blue_left and you are not activating left_gripper then do pickup_blue_left
-if you are sensing blue_right and you are not activating left_gripper then do pickup_blue_right
-if you are sensing red_left and you are not activating right_gripper then do pickup_red_left
-if you are sensing red_right and you are not activating right_gripper then do pickup_red_right
+always not (drop_left and pickup_blue_left)
+always not (drop_left and pickup_blue_right)
+always not (drop_right and pickup_red_left)
+always not (drop_right and pickup_red_right)
 
-# drop cubes
-if you are activating left_gripper and you are sensing left_bin_clear then do drop_left
-if you are activating right_gripper and you are sensing right_bin_clear then do drop_right
+do help if and only if you are activating left_gripper and you are not sensing left_bin_clear
+do help if and only if you are activating right_gripper and you are not sensing right_bin_clear
 
-# call for help if there are cubes left but bins are blocked
-if you are sensing left_gripper and you are not sensing left_bin_clear then do help
-if you are activating right_gripper and you are not sensing right_bin_clear then do help
+always not (help and pickup_blue_left)
+always not (help and pickup_blue_right)
+always not (help and pickup_red_left)
+always not (help and pickup_red_right)
+always not (help and drop_left)
+always not (help and drop_right)
 
-if you are activating help then do not drop_left
-if you are activating help then do not drop_right
-if you are activating help then do not pickup_blue_left
-if you are activating help then do not pickup_blue_right
-if you are activating help then do not pickup_red_left
-if you are activating help then do not pickup_red_right
 

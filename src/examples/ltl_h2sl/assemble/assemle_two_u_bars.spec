@@ -20,7 +20,7 @@ fastslow: False
 decompose: True
 
 CurrentConfigName:
-rocbot
+simulation
 
 Customs: # List of custom propositions
 right_fitted
@@ -50,4 +50,6 @@ if you are activating right_fitted and you are activating left_fitted then do li
 # call for help
 if you are not sensing right_available and you are not activating right_fitted then do help
 if you are not sensing left_available and you are not activating left_fitted then do help
+
+
 

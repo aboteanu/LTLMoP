@@ -20,7 +20,7 @@ fastslow: False
 decompose: True
 
 CurrentConfigName:
-rocbot
+simulation
 
 Customs: # List of custom propositions
 left_gripper
