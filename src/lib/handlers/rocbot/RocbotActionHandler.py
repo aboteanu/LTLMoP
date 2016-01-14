@@ -16,8 +16,7 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 		self.lc = lcm.LCM()
 
 		self.lc.subscribe( "ACTION_OUTCOME_ROCBOT",
-				RocbotActionHandler.action_outcome_handler
-				) #TODO channel name
+				RocbotActionHandler.action_outcome_handler) 
 
 		print 'RocbotActuatorHandler'
 
@@ -59,9 +58,6 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 		action_msg.object_num = len(object_list)
 		action_msg.objects = object_list
 
-		global action_msg_timestamp
-		action_msg_timestamp = timestamp
-
 		self.lc.publish("ACTION_SM_ROCBOT", action_msg.encode() )
 
 		k=0
@@ -73,8 +69,7 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 				result = action_outcome_msg["result"]
 				action_outcome_msg = None
 				return result
-			elif k < 3:
-                        # TODO increase this value once the sim is sending messages; wait for 20s at most
+			elif k < 100:
 				k+=1
 			else: 
 				return False

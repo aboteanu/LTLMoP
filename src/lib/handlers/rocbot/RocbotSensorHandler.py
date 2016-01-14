@@ -21,9 +21,7 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
                 self.subscription = self.lc.subscribe( "STATE_MODEL_ROCBOT", RocbotSensorHandler.world_state_handler )
 		self.recent_state = dict()
 		
-		print 'RocbotSensorHandler'
-
-# state message format
+# state_model_msg_t format
 #  int64_t timestamp;
 #  string id;
 #  int32_t num_state_joints;
@@ -75,7 +73,8 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 			for sb in self.recent_state[msg_id].state_bodies:
 				if object_type == "na":
 					yield ( (msg_id, sb) )
-				elif ( object_type == self.id_to_type( sb.id ) ): # TODO test color
+				elif ( object_type == self.id_to_type( sb.id ) ): 
+					#TODO test color
 					yield ( (msg_id, object_type, sb) )
 
 	def matching_objects(self, object_type, object_color="na"):
