@@ -34,6 +34,7 @@ left_available, 1
 ======== SPECIFICATION ========
 
 Spec: # Specification in structured English
+environment starts with false
 robot starts with false
 
 # state for placing both sides
@@ -41,15 +42,13 @@ right_fitted is set on put_right and reset on lift_assembly
 left_fitted is set on put_left and reset on lift_assembly
 
 # when to pickup
-if you are sensing right_available and you are not activating right_fitted then do put_right
-if you are sensing left_available and you are not activating left_fitted then do put_left
+if you are sensing right_available and you did not activate right_fitted then do put_right
+if you are sensing left_available and you did not activate left_fitted then do put_left
 
 # lift the holder
-if you are activating right_fitted and you are activating left_fitted then do lift_assembly
+if you activated right_fitted and you activated left_fitted then do lift_assembly
 
 # call for help
-if you are not sensing right_available and you are not activating right_fitted then do help
-if you are not sensing left_available and you are not activating left_fitted then do help
-
-
+if you are not sensing right_available and you did not activate right_fitted then do help
+if you are not sensing left_available and you did not activate left_fitted then do help
 

@@ -42,16 +42,18 @@ RegionMapping: # Mapping between region names and their decomposed counterparts
 others = p1
 
 Spec: # Specification in structured English
+environment starts with false
 robot starts with false
 
-do pickup_blue1 if and only if you are sensing blue1 and you are not activating left_gripper
-do pickup_blue2 if and only if you are sensing blue2 and you are not activating left_gripper
-do pickup_blue3 if and only if you are sensing blue3 and you are not activating left_gripper
+left_gripper is toggled on (pickup_blue1 or pickup_blue2 or pickup_blue3))
 
-do drop_left if and only if you are activating left_gripper and you are sensing left_bin_clear
-do drop_right if and only if you are activating right_gripper and you are sensing right_bin_clear
+if you are sensing blue1 and you did not activate left_gripper then do pickup_blue1 
+if you are sensing blue2 and you did not activate  left_gripper then do pickup_blue2 
+if you are sensing blue3 and you did not activate  left_gripper then do pickup_blue3
 
-do help if and only if you are activating left_gripper and you are not sensing left_bin_clear
-do help if and only if you are activating right_gripper and you are not sensing right_bin_clear
+if you are activating left_gripper and you are sensing left_bin_clear then do drop_left 
+if you are activating right_gripper and you are sensing right_bin_clear then do drop_right 
 
+if you activated left_gripper and you are not sensing left_bin_clear then do help 
+if you activated right_gripper and you are not sensing right_bin_clear then do help
 
