@@ -13,7 +13,6 @@ s_msg = None
 
 class RocbotSensorHandler(handlerTemplates.SensorHandler):
 	def __init__(self, executor, shared_data):
-		self.RocbotInitHandler = shared_data['ROCBOT_INIT_HANDLER']
 
                 # start lcm
                 self.lc = lcm.LCM()

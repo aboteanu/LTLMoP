@@ -11,8 +11,6 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
 		self.last_action_id = 0
 
-		self.rocbotInitHandler = shared_data["ROCBOT_INIT_HANDLER"]
-
 		self.lc = lcm.LCM()
 
 		self.lc.subscribe( "ACTION_OUTCOME_ROCBOT",
@@ -64,8 +62,7 @@ class RocbotActionHandler(handlerTemplates.ActuatorHandler):
 		while True:
 			time.sleep(0.1)
 			self.lc.handle()
-			if action_outcome_msg is not None and 
-				action_outcome_msg["action_id"] == self.last_action_id:
+			if (action_outcome_msg is not None) and (action_outcome_msg["action_id"] == self.last_action_id):
 				result = action_outcome_msg["result"]
 				action_outcome_msg = None
 				return result
