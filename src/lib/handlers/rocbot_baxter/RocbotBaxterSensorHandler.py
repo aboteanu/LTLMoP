@@ -5,7 +5,7 @@ import math
 import lcm
 
 import ltl_h2sl_symbols
-from rocbot_baxter import state_model_msg_t
+from rocbot import state_model_msg_t
 
 import lib.handlers.handlerTemplates as handlerTemplates
 
@@ -13,7 +13,7 @@ s_msg = None
 
 class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 	def __init__(self, executor, shared_data):
-		self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_DATA']
+		self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_HANDLER']
 
                 # start lcm
                 self.lc = lcm.LCM()

@@ -14,7 +14,7 @@ class RocbotBaxterLocomotionCommandHandler(handlerTemplates.LocomotionCommandHan
 
         speed (float): The speed multiplier (default=1.0,min=6.0,max=15.0)
         """
-	self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_DATA']
+	self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_HANDLER']
         self.speed = speed
 
     def sendCommand(self, cmd):

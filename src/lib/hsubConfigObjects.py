@@ -334,8 +334,11 @@ class HandlerConfig(object):
         """
 
         # add lib to the module name if it is not there already
-        if not handler_module_path.startswith('lib.'): handler_module_path = 'lib.' + handler_module_path
+        if not handler_module_path.startswith('lib.'): 
+		handler_module_path = 'lib.' + handler_module_path
+
         handler_module_name = handler_module_path.rpartition('.')[2]
+
         # Try to load the handler file
         logging.debug("Inspecting handler: {}".format(handler_module_name))
         try:
