@@ -20,7 +20,7 @@ fastslow: False
 decompose: True
 
 CurrentConfigName:
-simulation
+rocbot_baxter
 
 Customs: # List of custom propositions
 left_gripper
@@ -46,20 +46,4 @@ if you are sensing tray_on_left and you did not activate left_gripper then do pi
 
 if you are activated right_gripper then do drop_in_bin
 if you activated left_gripper and you are sensing tray_on_left then do place_on_tray
-
-# how to pickup
-#right_gripper is set on pickup_from_tray and reset on drop_in_bin
-#left_gripper is set on pickup_from_side and reset on place_on_tray
-
-# pickup one object at a time
-#if you are activating left_gripper then do not pickup_from_side
-#if you are activating right_gripper then do not pickup_from_tray
-
-# when to pickup
-#if you are sensing tray_on_right and you are sensing tray_full then do pickup_from_tray
-#if you are sensing tray_on_left then do pickup_from_side
-
-# place or drop cubes
-#if you are activating right_gripper then do drop_in_bin
-#if you are activating left_gripper and you are sensing tray_on_left then do place_on_tray
 
