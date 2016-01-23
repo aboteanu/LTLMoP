@@ -5,19 +5,19 @@ import math
 import lcm
 
 import ltl_h2sl_symbols
-from rocbot import state_model_msg_t
+from rocbot_baxter import state_model_msg_t
 
 import lib.handlers.handlerTemplates as handlerTemplates
 
 s_msg = None
 
-class RocbotSensorHandler(handlerTemplates.SensorHandler):
+class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 	def __init__(self, executor, shared_data):
 
                 # start lcm
                 self.lc = lcm.LCM()
                 # subscribe to world state channel
-                self.subscription = self.lc.subscribe( "STATE_MODEL_ROCBOT", RocbotSensorHandler.world_state_handler )
+                self.subscription = self.lc.subscribe( "STATE_MODEL_ROCBOT", RocbotBaxterSensorHandler.world_state_handler )
 		self.recent_state = dict()
 		
 # state_model_msg_t format
@@ -31,7 +31,7 @@ class RocbotSensorHandler(handlerTemplates.SensorHandler):
 	@staticmethod
         def world_state_handler( channel, data ):
 		"""
-		Handler for rocbot LCM state messages
+		Handler for rocbot_baxter LCM state messages
 
 		channel (string): lcm channel name
 		data (dict): data message read on the channel

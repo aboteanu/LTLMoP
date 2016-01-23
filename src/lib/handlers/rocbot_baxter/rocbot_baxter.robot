@@ -2,26 +2,26 @@ DriveHandler: # Input value for robot drive handler, refer to file inside the ha
 share.Drive.HolonomicDriveHandler(multiplier=50.0,maxspeed=999.0)
 
 InitHandler: # Input value for robot init handler, refer to the init file inside the handlers/robots/Type folder
-rocbot.RocbotInitHandler()
+rocbot_baxter.RocbotBaxterInitHandler()
 
 LocomotionCommandHandler: # Input value for robot locomotion command handler, refer to file inside the handlers/robots/Type folder
-rocbot.RocbotLocomotionCommandHandler(speed=1.0)
+rocbot_baxter.RocbotBaxterLocomotionCommandHandler(speed=1.0)
 
 MotionControlHandler: # Input value for robot motion control handler, refer to file inside the handlers/motionControl folder
 share.MotionControl.VectorControllerHandler()
 
 PoseHandler: # Input value for robot pose handler, refer to file inside the handlers/pose folder
-rocbot.RocbotNullPoseHandler()
+rocbot_baxter.RocbotBaxterNullPoseHandler()
 
 RobotName: # Robot Name
-rocbot
+rocbot_baxter
 
 Type: # Robot type
-rocbot
+rocbot_baxter
 
-SensorHandler: # Rocbot simulator world state, triggers sensors
-rocbot.RocbotSensorHandler()
+SensorHandler: # RocbotBaxter simulator world state, triggers sensors
+rocbot_baxter.RocbotBaxterSensorHandler()
 
 ActuatorHandler:
-rocbot.RocbotActionHandler()
+rocbot_baxter.RocbotBaxterActionHandler()
 

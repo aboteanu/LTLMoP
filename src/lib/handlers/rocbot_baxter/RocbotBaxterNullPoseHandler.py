@@ -11,7 +11,7 @@ from lib.regions import *
 
 import lib.handlers.handlerTemplates as handlerTemplates
 
-class RocbotNullPoseHandler(handlerTemplates.PoseHandler):
+class RocbotBaxterNullPoseHandler(handlerTemplates.PoseHandler):
     def __init__(self, executor, shared_data, initial_region):
         """
         Null pose handler - used for single region operation without Vicon

@@ -1,10 +1,10 @@
 """
-Rocbot handler, the simulator is assumed to be already running
+RocbotBaxter handler, the simulator is assumed to be already running
 """
 
 import lib.handlers.handlerTemplates as handlerTemplates
 
-class RocbotInitHandler(handlerTemplates.InitHandler):
+class RocbotBaxterInitHandler(handlerTemplates.InitHandler):
 	def __init__(self, executor):
 		pass
 

@@ -7,16 +7,16 @@ from ltl_h2sl import object_msg_t, action_msg_t, action_outcome_msg_t
 
 action_outcome_msg = None
 
-class RocbotActionHandler(handlerTemplates.ActuatorHandler):
+class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
 		self.last_action_id = 0
 
 		self.lc = lcm.LCM()
 
 		self.lc.subscribe( "ACTION_OUTCOME_ROCBOT",
-				RocbotActionHandler.action_outcome_handler) 
+				RocbotBaxterActionHandler.action_outcome_handler) 
 
-		print 'RocbotActuatorHandler'
+		print 'RocbotBaxterActuatorHandler'
 
 	@staticmethod
 	def action_outcome_handler( channel, data ):
