@@ -18,7 +18,7 @@ class RocbotBaxterNullPoseHandler(handlerTemplates.PoseHandler):
 
         initial_region (region): Starting position for robot
         """
-
+	self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_DATA']
         self.x = 0
         self.y = 0
         self.theta = 0

@@ -9,4 +9,4 @@ class RocbotBaxterInitHandler(handlerTemplates.InitHandler):
 		pass
 
 	def getSharedData(self):
-		return { "ROCBOT_INIT_HANDLER" : self }
+		return { "ROCBOT_BAXTER_INIT_HANDLER" : self }

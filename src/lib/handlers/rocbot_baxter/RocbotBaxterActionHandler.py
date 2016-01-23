@@ -9,6 +9,7 @@ action_outcome_msg = None
 
 class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
+		self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_DATA']
 		self.last_action_id = 0
 
 		self.lc = lcm.LCM()

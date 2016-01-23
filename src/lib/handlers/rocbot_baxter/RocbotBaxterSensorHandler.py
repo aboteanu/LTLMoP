@@ -13,6 +13,7 @@ s_msg = None
 
 class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 	def __init__(self, executor, shared_data):
+		self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_DATA']
 
                 # start lcm
                 self.lc = lcm.LCM()
