@@ -5,9 +5,10 @@
 ======== SETTINGS ========
 
 Actions: # List of action propositions and their state (enabled = 1, disabled = 0)
-put_left, 1
-put_right, 1
-lift_assembly, 1
+put1, 1
+put2, 1
+put3, 1
+put4, 1
 help, 1
 
 CompileOptions:
@@ -23,12 +24,17 @@ CurrentConfigName:
 rocbot_baxter
 
 Customs: # List of custom propositions
-right_fitted
-left_fitted
+fitted1
+fitted2
+fitted3
+fitted4
+full
 
 Sensors: # List of sensor propositions and their state (enabled = 1, disabled = 0)
-right_available, 1
-left_available, 1
+ubar1, 1
+ubar2, 1
+ubar3, 1
+ubar4, 1
 
 
 ======== SPECIFICATION ========
@@ -37,18 +43,25 @@ Spec: # Specification in structured English
 environment starts with false
 robot starts with false
 
+Group fitted is fitted1, fitted2, fitted3, fitted4
+
 # state for placing both sides
-right_fitted is set on put_right and reset on lift_assembly
-left_fitted is set on put_left and reset on lift_assembly
+fitted1 is set on put1 and reset on FALSE
+fitted2 is set on put2 and reset on FALSE
+fitted3 is set on put3 and reset on FALSE
+fitted4 is set on put4 and reset on FALSE
+#full is set on (fitted1 and fitted2 and fitted3 and fitted4) and reset on FALSE
+full is set on all fitted and reset on FALSE
 
 # when to pickup
-if you are sensing right_available and you did not activate right_fitted then do put_right
-if you are sensing left_available and you did not activate left_fitted then do put_left
-
-# lift the holder
-if you activated right_fitted and you activated left_fitted then do lift_assembly
+if you are sensing ubar1 and you did not activate fitted1 then do put1
+if you are sensing ubar2 and you did not activate fitted2 then do put2
+if you are sensing ubar3 and you did not activate fitted3 then do put3
+if you are sensing ubar4 and you did not activate fitted4 then do put4
 
 # call for help
-if you are not sensing right_available and you did not activate right_fitted then do help
-if you are not sensing left_available and you did not activate left_fitted then do help
+if you are not sensing ubar1 and you did not activate fitted1 then do help
+if you are not sensing ubar2 and you did not activate fitted2 then do help
+if you are not sensing ubar3 and you did not activate fitted3 then do help
+if you are not sensing ubar4 and you did not activate fitted4 then do help
 
