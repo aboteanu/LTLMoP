@@ -28,25 +28,30 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 		global action_outcome_msg
 		action_outcome_msg = action_outcome_msg_t.decode( data )
 
-	def action_dispatch_nsf( self, action_type, object_id, actuatorVal, initial=False):
+	def action_dispatch( self, action_type, object_id, actuatorVal, initial=False):
 		"""
 		Execute an action on one object
 
 		action_type (str): action type
 		object_id (str): object id in world
 		"""
+		#gripper (str): left, right or na
+
+		if not actuatorVal:
+			return None
 		action_msg = action_msg_t()
+		action_msg.type_string = "pickup_object"
+	#	action_msg.required_gripper = gripper
 		action_msg.param_num = 1
 		action_type_str = ltl_h2sl_symbols.action_types[ action_type ][1]
 		action_msg.params = list()
-		action_msg.params.append( [ action_type_str, object_id ] )
+		action_msg.params.append( ( action_type_str, object_id ) )
 
 		self.lc.publish( "ACTION_ROCBOT", action_msg.encode() )
 
-		print 'ACTION', action_type, object_id, actuatorVal
-		#time.sleep(5)
+		time.sleep(5)
 
-	def action_dispatch( self, action_type, objects, actuatorVal, initial=False):
+	def action_dispatch_old( self, action_type, objects, actuatorVal, initial=False):
 		"""
 		TODO NOT USED
 		Execute an action on one object
@@ -54,6 +59,10 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 		action_type (str): action type
 		objects (list): list of object tuples (type, color)
 		"""
+
+		if not actuatorVal:
+			print action_type, actuatorVal
+			return None
 
 		timestamp = int(time.time())
 		object_list=list()

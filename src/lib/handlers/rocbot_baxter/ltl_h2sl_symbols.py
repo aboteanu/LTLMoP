@@ -1,6 +1,6 @@
 action_types = {
 	"ACTION_TYPE_UNKNOWN" : [ 0, "na"],
-	"ACTION_TYPE_PICKUP" : [ 1, "pickup_object", "pickup", "take"],
+	"ACTION_TYPE_PICKUP" : [ 1, "pick_object", "pickup", "take"],
 	"ACTION_TYPE_DROP" : [ 2, "drop" ],
 	"ACTION_TYPE_INSERT" : [ 3, "insert" ],
 	"ACTION_TYPE_PLACE" : [ 4, "place" ],
