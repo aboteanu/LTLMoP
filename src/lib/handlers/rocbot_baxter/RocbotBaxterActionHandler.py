@@ -3,7 +3,7 @@ import time
 import lcm
 
 import ltl_h2sl_symbols
-from ltl_h2sl import object_msg_t, action_msg_t, action_outcome_msg_t
+from ltl_h2sl import object_msg_t, action_msg_old_t, action_msg_t, action_outcome_msg_t
 
 action_outcome_msg = None
 
@@ -17,8 +17,6 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 		self.lc.subscribe( "ACTION_OUTCOME_ROCBOT",
 				RocbotBaxterActionHandler.action_outcome_handler) 
 
-		print 'RocbotBaxterActuatorHandler'
-
 	@staticmethod
 	def action_outcome_handler( channel, data ):
 		"""
@@ -30,8 +28,27 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 		global action_outcome_msg
 		action_outcome_msg = action_outcome_msg_t.decode( data )
 
+	def action_dispatch_nsf( self, action_type, object_id, actuatorVal, initial=False):
+		"""
+		Execute an action on one object
+
+		action_type (str): action type
+		object_id (str): object id in world
+		"""
+		action_msg = action_msg_t()
+		action_msg.param_num = 1
+		action_type_str = ltl_h2sl_symbols.action_types[ action_type ][1]
+		action_msg.params = list()
+		action_msg.params.append( [ action_type_str, object_id ] )
+
+		self.lc.publish( "ACTION_ROCBOT", action_msg.encode() )
+
+		print 'ACTION', action_type, object_id, actuatorVal
+		#time.sleep(5)
+
 	def action_dispatch( self, action_type, objects, actuatorVal, initial=False):
 		"""
+		TODO NOT USED
 		Execute an action on one object
 
 		action_type (str): action type
@@ -49,7 +66,7 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			object_list.append(object_msg)
 	
 		self.last_action_id += 1	
-		action_msg = action_msg_t()
+		action_msg = action_msg_old_t()
 		action_msg.action_id = self.last_action_id
 		action_msg.timestamp = timestamp
 		action_msg.invert = not actuatorVal
@@ -57,10 +74,12 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 		action_msg.object_num = len(object_list)
 		action_msg.objects = object_list
 
-		self.lc.publish("ACTION_SM_ROCBOT", action_msg.encode() )
-
+		self.lc.publish("ACTION_ROCBOT", action_msg.encode() )
+		print 'action', action_type, objects
+		# TODO convert to new executive format, use nsf_nri_mvli action_msg_t
 		k=0
 		while True:
+			break
 			time.sleep(0.1)
 			self.lc.handle()
 			if (action_outcome_msg is not None) and (action_outcome_msg["action_id"] == self.last_action_id):
