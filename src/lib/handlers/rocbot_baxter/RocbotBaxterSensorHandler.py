@@ -40,67 +40,19 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		global s_msg
                 s_msg = state_model_msg_t.decode(data)
 
-	def listen_for_state(self):
-		# clear old data
-		state_messages = dict()
-		while True:
-			self.lc.handle()
-			# stop when message keys start repeating i.e. we have all objects
-			if s_msg.id in state_messages:
-				break
-			state_messages[s_msg.id] = s_msg
-		return state_messages
-
-	#def id_to_type( self, msg_id ):
-	#	"""
-	#	Looks up an object symbol type by a name, returns the type if found or None otherwise
-#
-#		msg_id (string): id string as returned in the lcm message type
-#		"""
-#		for obj_type in ltl_h2sl_symbols.object_types:
-#			if msg_id in ltl_h2sl_symbols.object_types[ obj_type ]:
-#				return obj_type
-#		return None
-#
-	#def _matching_objects( self, object_type, object_color="na" ):
-	#	"""
-	#	yield matching objects
-#
-#		object_type (string): ltl_h2sl object type
-#		object_color (string): ltl_h2sl object color
-#		"""
-#		for msg_id in self.recent_state:
-#			for sb in self.recent_state[msg_id].state_bodies:
-#				if object_type == "na":
-#					yield ( (msg_id, sb) )
-#				elif ( object_type == self.id_to_type( sb.id ) ): 
-#					#TODO test color
-#					yield ( (msg_id, object_type, sb) )
-#
-#	def matching_objects(self, object_type, object_color="na"):
-#		"""
-#		Return a list of all state messages in the message list
-#		that contain a body with matching type and color
-#
-#		object_type (string): ltl_h2sl object type
-#		object_color (string): ltl_h2sl object color
-#		"""
-#		result = list()
-#		for i in self._matching_objects( object_type, object_color ):
-#			if i is not None:
-#				result.append( i )
-#		return result	
-
 	def match_object( self, object_id ):
 		'''
 		test if this object is in the world
 
 		object_id (string) : object message id
 		'''
-		for msg_id in self.recent_state:
-			for sb in self.recent_state[msg_id].state_bodies:
-				if object_id == msg_id or (object_id == "na"):
-					return (msg_id, object_id, sb)
+		for k in range(10):
+			self.lc.handle()
+			if object_id == s_msg.id:
+				return ( object_id, s_msg.state_bodies[0] )
+			for sb in s_msg.state_bodies:
+				if (object_id == sb.id): 
+					return (object_id, sb)
 		return None
 
 	def distance_coord( self, body1, body2 ):
@@ -111,34 +63,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		x1, y1, z1 = body1
 		x2, y2, z2 = body2
-		return math.sqrt( pow( x1 - x2, 2) + pow( y1 - y2, 2 ) +
-				pow ( z1 - z2, 2 ) )
-
-	def sensor_type_observed(self, object_id, object_type, object_color, initial=False):
-		"""
-		object_type (string): must be in object_types
-		object_color (string): must be in object_colors
-		object_id (string) : world object id
-		"""
-		if initial:
-			return False
-		self.recent_state = self.listen_for_state()
-		if self.match_object( object_id ) is not None:
-			return True
-		return False
-
-	def sensor_type_covered(self, object_id, object_type, object_color, initial=False):
-		"""
-		object_type (string): must be in object_types
-		object_color (string): must be in object_colors
-		object_id (string) : world object id
-		"""
-		if initial:
-			return False
-		# all objects that the input argument is under
-		return self.test_spatial_relation( object_type1=object_type, object_color1=object_color, 
-			object_type2="na", object_color2="na", 
-			test="under", min_threshold=0, max_threshold=100, exclude=["baxter"] )
+		return math.sqrt( pow( x1 - x2, 2) + pow( y1 - y2, 2 ) + pow ( z1 - z2, 2 ) )
 
 	def sensor_type_clear(self, object_id, object_type, object_color, initial=False):
 		"""
@@ -148,194 +73,63 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		if initial:
 			return False
-		# all objects that the input argument is under
-		return self.test_spatial_relation( 
-			object_id1 = object_id,
-			object_type1=object_type, 
-			object_color1=object_color, 
-			object_id2 = "na",
-			object_type2="na", 
-			object_color2="na", 
-			test="above", min_threshold=0, max_threshold=100, exclude=["baxter"] )
 
-	def sensor_type_full(self, object_id, object_type, object_color, initial=False):
+		x = self.match_object( object_id )
+		
+		if x:
+			obj_id1, sb1 = x
+			position1 = sb1.pose.position
+
+			for k in range(10):
+				self.lc.handle()
+				if 'baxter' in s_msg.id or object_id==s_msg.id:
+					continue
+				for sb2 in s_msg.state_bodies:
+					position2 = sb2.pose.position
+					if ( self.test_spatial_relation( position1, position2, test="above", min_threshold=0.2, max_threshold=100 ) and 
+						self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=.4 ) ):
+						return False
+		print object_id + ' clear'
+		return True		
+
+	def sensor_type_observed(self, object_id, object_type, object_color, initial=False):
 		"""
 		object_type (string): must be in object_types
 		object_color (string): must be in object_colors
 		object_id (string) : world object id
 		"""
-		return self.sensor_type_covered( object_type, object_color, initial )
-
-	def sensor_type_left(self, object_id1, object_type1, object_color1, object_id2, object_type2, object_color2, initial=False):
-		"""
-		object 1 is relative to object 2 
-
-		object_id1 (string) : world object id
-		object_id2 (string) : world object id
-		object_type1 (string): must be in object_types
-		object_color1 (string): must be in object_colors
-		object_type2 (string): must be in object_types
-		object_color2 (string): must be in object_colors
-		"""
 		if initial:
 			return False
-		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
-			object_type2=object_type2, object_color2=object_color2, 
-			test="left", min_threshold=.01, max_threshold=100, exclude=[] )
-
-	def sensor_type_right(self, object_id1, object_type1, object_color1, object_id2, object_type2, object_color2, initial=False):
-		"""
-		object 1 is relative to object 2 
-
-		object_id1 (string) : world object id
-		object_id2 (string) : world object id
-		object_type1 (string): must be in object_types
-		object_color1 (string): must be in object_colors
-		object_type2 (string): must be in object_types
-		object_color2 (string): must be in object_colors
-		"""
-		if initial:
-			return False
-		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
-			object_type2=object_type2, object_color2=object_color2, 
-			test="right", min_threshold=.01, max_threshold=100, exclude=[] )
-
-	def sensor_type_front(self, object_id1, object_type1, object_color1, object_id2, object_type2, object_color2, initial=False):
-		"""
-		object 1 is relative to object 2 
-
-		object_id1 (string) : world object id
-		object_id2 (string) : world object id
-		object_type1 (string): must be in object_types
-		object_color1 (string): must be in object_colors
-		object_type2 (string): must be in object_types
-		object_color2 (string): must be in object_colors
-		"""
-		if initial:
-			return False
-		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
-			object_type2=object_type2, object_color2=object_color2, 
-			test="front", min_threshold=.01, max_threshold=100, exclude=[] )
-
-	def sensor_type_back(self, object_id1, object_type1, object_color1, object_id2, object_type2, object_color2, initial=False):
-		"""
-		object 1 is relative to object 2 
-
-		object_id1 (string) : world object id
-		object_id2 (string) : world object id
-		object_type1 (string): must be in object_types
-		object_color1 (string): must be in object_colors
-		object_type2 (string): must be in object_types
-		object_color2 (string): must be in object_colors
-		"""
-		if initial:
-			return False
-		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
-			object_type2=object_type2, object_color2=object_color2, 
-			test="back", min_threshold=.01, max_threshold=100, exclude=[] )
-
-	def sensor_type_under(self, object_id1, object_type1, object_color1, object_id2, object_type2, object_color2, initial=False):
-		"""
-		object 1 is relative to object 2 
-
-		object_id1 (string) : world object id
-		object_id2 (string) : world object id
-		object_type1 (string): must be in object_types
-		object_color1 (string): must be in object_colors
-		object_type2 (string): must be in object_types
-		object_color2 (string): must be in object_colors
-		"""
-		if initial:
-			return False
-		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
-			object_type2=object_type2, object_color2=object_color2, 
-			test="under", min_threshold=.01, max_threshold=100, exclude=[] )
-
-	def sensor_type_above(self, object_id1, object_type1, object_color1, object_id2, object_type2, object_color2, initial=False):
-		"""
-		object 1 is relative to object 2 
-
-		object_id1 (string) : world object id
-		object_id2 (string) : world object id
-		object_type1 (string): must be in object_types
-		object_color1 (string): must be in object_colors
-		object_type2 (string): must be in object_types
-		object_color2 (string): must be in object_colors
-		"""
-		if initial:
-			return False
-		return self.test_spatial_relation( object_type1=object_type1, object_color1=object_color1, 
-			object_type2=object_type2, object_color2=object_color2, 
-			test="above", min_threshold=.01, max_threshold=100, exclude=[] )
-
-	def sensor_type_object_in_gripper( self, object_id, object_type, object_color, gripper ):
-		"""
-		Test if an object given by (type, color) is in the gripper ( values "left" or "right" )
-
-		object_id (string) : world object id
-		object_type (string): must be in object_types
-		object_color (string): must be in object_colors
-		gripper (string): possible values "left" or "right"
-		"""
-		if initial:
-			return False
-		if gripper == "left":
-			return self.test_spatial_relation( object_type1=object_type, object_color1=object_color, 
-					object_type2="OBJECT_TYPE_ROBOT_LEFT_HAND", object_color2="na", 
-					test="near", min_threshold=.01, max_threshold=0.1, exclude=[] )
+		x = self.match_object( object_id )
+		if x:
+			obj_id, sb = x
+			position = sb.pose.position 
+			self.object_in_workspace( position )
+			print object_id + ' observed'
+			return True
 		else:
-			return self.test_spatial_relation( object_type1=object_type, object_color1=object_color, 
-					object_type2="OBJECT_TYPE_ROBOT_RIGHT_HAND", object_color2="na", 
-					test="near", min_threshold=.01, max_threshold=0.1, exclude=[] )
+			return False
 
-	def sensor_type_object_in_workspace( self, object_id, object_type, object_color, gripper ):
+	def object_in_workspace( self, position ):
 		"""
 		Test if an object given by (type, color) is in the workspace of the gripper ( values "left" or "right" ), do this by testing if it is within a set distance from the robot's body.
 
 		object_id (string) : world object id
-		object_type (string): must be in object_types
-		object_color (string): must be in object_colors
 		gripper (string): possible values "left" or "right"
 		"""
-		if initial:
-			return False
-		return self.test_spatial_relation( object_type1=object_type, object_color1=object_color, 
-					object_type2="OBJECT_TYPE_ROBOT_TORSO", object_color2="na", 
-					test="near", min_threshold=0.0, max_threshold=0.4, exclude=[] )
+	 	obj_id, sb = self.match_object( 'baxter-baxter-torso' )
+		torso_position = sb.pose.position
+		return self.test_spatial_relation( position , torso_position, 
+			test="near", min_threshold=0.0, max_threshold=1.0 )
 
-	def test_spatial_relation( self, object_id1, object_type1, object_color1, 
-				object_id2, object_type2, object_color2, 
-				test, min_threshold = 0, max_threshold=100, exclude=[] ):
+	def test_spatial_relation( self, position1, position2, test, min_threshold = 0, max_threshold=100, ):
 		"""
-		object_id1 (string) : world object id
-		object_id2 (string) : world object id
-		object_type1 (string): must be in object_types
-		object_color1 (string): must be in object_colors
-		object_type2 (string): must be in object_types
-		object_color2 (string): must be in object_colors
+		position1 (tuple) : dict 
+		position2 (tuple) :kdict 
 		test (string) : type of test
 		min_threshold (float) : at least this far in one dimension
 		max_threshold (float) : limit distance for 'near' tests
-		exclude (list) : list of object names that will be ignored in matching_objects results
 		"""
-		self.recent_state = self.listen_for_state()
-		# find all objects that match the type and color 
-		# lists of tuples (msg_id, body)
-		obj1 = self.match_object(object_id1) #self.matching_objects( object_type1, object_color1 )
-		obj2 = self.match_object(object_id2) #self.matching_objects( object_type2, object_color2 )
-
-		if ( obj1 is None ) or ( obj2 is None):
-			return False
-
-		# for all possible pairs, test if the relation holds 
-		# return at the first positive
-		msg_id1, type1, body1 = obj1
-		msg_id2, type2, body2 = obj2
-		if obj1[0] in exclude or obj2[0] in exclude:
-			return True
-
-		position1 = body1.pose.position
-		position2 = body2.pose.position
 
 		x1,y1,z1 = position1.data
 		x2,y2,z2 = position2.data
@@ -353,11 +147,6 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		elif test == 'under':
 			return z1 > z2 + min_threshold
 		elif test == 'near':
-			return ( ( self.distance_coord( 
-				(x1,y1,z1), (x2,y2,z2)	
-				) < max_threshold ) and
-				( self.distance_coord( 
-				(x1,y1,z1), (x2,y2,z2)	
-				) > min_threshold ) )
+			return ( self.distance_coord( (x1,y1,z1), (x2,y2,z2)) <= max_threshold ) 
 
 		return False

@@ -47,16 +47,16 @@ Spec: # Specification in structured English
 environment starts with false
 robot starts with false
 
-left_gripper is set on (pickup_blue1 or pickup_blue2) and reset on drop_left
-right_gripper is set on (pickup_red1 or pickup_red2) and reset on drop_right
+right_gripper is set on (pickup_blue1 or pickup_blue2) and reset on drop_left
+left_gripper is set on (pickup_red1 or pickup_red2) and reset on drop_right
 
 if you are sensing blue1 and you did not activate left_gripper then do pickup_blue1
 if you are sensing blue2 and you did not activate  left_gripper then do pickup_blue2
 if you are sensing red1 and you did not activate right_gripper then do pickup_red1
 if you are sensing red2 and you did not activate right_gripper then do pickup_red2
 
-if you are activating left_gripper and you are sensing left_bin_clear then do drop_left
-if you are activating right_gripper and you are sensing right_bin_clear then do drop_right
+if you activated left_gripper and you are sensing left_bin_clear then do drop_left
+if you activated right_gripper and you are sensing right_bin_clear then do drop_right
 
 if you activated left_gripper and you are not sensing left_bin_clear then do help
 if you activated right_gripper and you are not sensing right_bin_clear then do help

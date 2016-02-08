@@ -3,7 +3,7 @@ import time
 import lcm
 
 import ltl_h2sl_symbols
-from ltl_h2sl import object_msg_t
+from rocbot import empty_msg_t
 from nsf_nri_mvli import action_msg_t
 
 action_outcome_msg = None
@@ -15,7 +15,7 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 
 		self.lc = lcm.LCM()
 
-		self.lc.subscribe( "ACTION_OUTCOME_ROCBOT",
+		self.lc.subscribe( "EXECUTIVE_SEQUENCE_FINISHED",
 				RocbotBaxterActionHandler.action_outcome_handler) 
 
 	@staticmethod
@@ -27,7 +27,7 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 		data (dict): message data
 		"""
 		global action_outcome_msg
-		action_outcome_msg = action_outcome_msg_t.decode( data )
+		action_outcome_msg = empty_msg_t.decode( data )
 
 	def action_dispatch( self, gripper, action_type, object_id, actuatorVal, initial=False):
 		"""
@@ -41,16 +41,27 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 		if not actuatorVal:
 			return None
 		action_msg = action_msg_t()
-		action_msg.type_string = "pickup_object"
 		action_msg.required_gripper = gripper
 		action_msg.param_num = 1
 		action_type_str = ltl_h2sl_symbols.action_types[ action_type ][1]
 		action_msg.params = list()
 		action_msg.params.append( ( action_type_str, object_id ) )
 
+		action_outcome_msg = None
 		self.lc.publish( "ACTION_ROCBOT", action_msg.encode() )
 
-		time.sleep(5)
+		k=0
+		while k<12: # wait 2 min
+			self.lc.handle_timeout(10000) #milis
+			if (action_outcome_msg is not None):
+				break # action completed if we got the message
+			print 'Waiting...'
+			k+=1
+		if k==10:
+			print 'Timed out!'
+		else:
+			print 'Completed'
+			
 
 #	def action_dispatch_old( self, action_type, objects, actuatorVal, initial=False):
 #		"""
