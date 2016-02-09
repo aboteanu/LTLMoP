@@ -5,7 +5,7 @@ action_types = {
 	"ACTION_TYPE_INSERT" : [ 3, "insert" ],
 	"ACTION_TYPE_PLACE" : [ 4, "place" ],
 	"ACTION_TYPE_HANDOFF" : [ 5, "handoff" ],
-	"ACTION_TYPE_INTERVENTION" : [ 6, "help", "intervention" ]
+	"ACTION_TYPE_INTERVENTION" : [ 6, "intervention" ]
 	}
 
 object_types = {
