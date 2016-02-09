@@ -23,7 +23,7 @@ fastslow: False
 decompose: True
 
 CurrentConfigName:
-simulation
+rocbot_baxter
 
 Customs: # List of custom propositions
 right_gripper
@@ -44,7 +44,6 @@ RegionMapping: # Mapping between region names and their decomposed counterparts
 others = p1
 
 Spec: # Specification in structured English
-#environment starts with false
 robot starts with false
 
 right_gripper is set on (pickup_blue1 or pickup_blue2) and reset on drop_right
@@ -61,4 +60,6 @@ if you activated right_gripper and you are sensing right_bin_clear then do drop_
 if you are activating left_gripper and you are not sensing left_bin_clear then do help
 if you are activating right_gripper and you are not sensing right_bin_clear then do help
 
+always !(pickup_blue1 and pickup_blue2)
+always !(pickup_red1 and pickup_red2)
 
