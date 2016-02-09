@@ -89,7 +89,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 					if ( self.test_spatial_relation( position1, position2, test="above", min_threshold=0.2, max_threshold=100 ) and 
 						self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=.4 ) ):
 						return False
-		print object_id + ' clear'
+		#print object_id + ' clear'
 		return True		
 
 	def sensor_type_observed(self, object_id, object_type, object_color, initial=False):
@@ -105,7 +105,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			obj_id, sb = x
 			position = sb.pose.position 
 			self.object_in_workspace( position )
-			print object_id + ' observed'
+			#print object_id + ' observed'
 			return True
 		else:
 			return False
