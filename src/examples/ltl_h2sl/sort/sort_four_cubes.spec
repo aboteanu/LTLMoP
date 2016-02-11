@@ -51,7 +51,7 @@ do pickup_red1 if and only if you are sensing red1 and you are not activating le
 
 do pickup_red2 if and only if you are sensing red2 and not red1 and you are not activating left_gripper and you are not activating drop_left
 
-do drop_left if and only if you activated left_gripper and you are sensing left_bin_clear
+do drop_left if and only if you activated left_gripper and you are sensing left_bin_clear and you are not activating drop_right
 if you are activating left_gripper and you are not sensing left_bin_clear then do help
 
 right_gripper is set on (pickup_blue1 or pickup_blue2) and reset on drop_right
@@ -61,4 +61,5 @@ do pickup_blue2 if and only if you are sensing blue2 and not blue1 and you are n
 
 do drop_right if and only if you activated right_gripper and you are sensing right_bin_clear
 if you are activating right_gripper and you are not sensing right_bin_clear then do help
+
 

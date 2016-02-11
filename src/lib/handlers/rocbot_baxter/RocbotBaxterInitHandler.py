@@ -13,8 +13,6 @@ class RocbotBaxterInitHandler(handlerTemplates.InitHandler):
 
                 self.sensor_subscription = self.lc_sensor.subscribe( "STATE_MODEL_ROCBOT", 
 				self.world_state_handler )
-                self.done_subscription = self.lc_done.subscribe( "EXECUTIVE_SEQUENCE_FINISHED",
-                                self.action_outcome_handler)
 
 		self.s_msg = None
 
