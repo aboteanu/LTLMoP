@@ -9,36 +9,9 @@ from rocbot import state_model_msg_t
 
 import lib.handlers.handlerTemplates as handlerTemplates
 
-s_msg = None
-
 class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 	def __init__(self, executor, shared_data):
 		self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_HANDLER']
-
-                # start lcm
-                self.lc = lcm.LCM()
-                # subscribe to world state channel
-                self.subscription = self.lc.subscribe( "STATE_MODEL_ROCBOT", RocbotBaxterSensorHandler.world_state_handler )
-		self.recent_state = dict()
-		
-# state_model_msg_t format
-#  int64_t timestamp;
-#  string id;
-#  int32_t num_state_joints;
-#  state_joint_msg_t state_joints[ num_state_joints ];
-#  int32_t num_state_bodies;
-#  state_body_msg_t state_bodies[ num_state_bodies ];
-
-	@staticmethod
-        def world_state_handler( channel, data ):
-		"""
-		Handler for rocbot_baxter LCM state messages
-
-		channel (string): lcm channel name
-		data (dict): data message read on the channel
-		"""
-		global s_msg
-                s_msg = state_model_msg_t.decode(data)
 
 	def match_object( self, object_id ):
 		'''
@@ -47,10 +20,10 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		object_id (string) : object message id
 		'''
 		for k in range(10):
-			self.lc.handle()
-			if object_id == s_msg.id:
-				return ( object_id, s_msg.state_bodies[0] )
-			for sb in s_msg.state_bodies:
+			self.RocbotBaxterInitHandler.lc_sensor.handle()
+			if object_id == self.RocbotBaxterInitHandler.s_msg.id:
+				return ( object_id, self.RocbotBaxterInitHandler.s_msg.state_bodies[0] )
+			for sb in self.RocbotBaxterInitHandler.s_msg.state_bodies:
 				if (object_id == sb.id): 
 					return (object_id, sb)
 		return None
@@ -81,10 +54,10 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			position1 = sb1.pose.position
 
 			for k in range(10):
-				self.lc.handle()
-				if 'baxter' in s_msg.id or object_id==s_msg.id:
+				self.RocbotBaxterInitHandler.lc_sensor.handle()
+				if 'baxter' in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
 					continue
-				for sb2 in s_msg.state_bodies:
+				for sb2 in self.RocbotBaxterInitHandler.s_msg.state_bodies:
 					position2 = sb2.pose.position
 					if ( self.test_spatial_relation( position1, position2, test="above", min_threshold=0.2, max_threshold=100 ) and 
 						self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=.4 ) ):
