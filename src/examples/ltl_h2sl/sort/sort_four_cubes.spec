@@ -23,7 +23,7 @@ fastslow: False
 decompose: True
 
 CurrentConfigName:
-simulation
+rocbot_baxter
 
 Customs: # List of custom propositions
 right_gripper
@@ -44,25 +44,21 @@ RegionMapping: # Mapping between region names and their decomposed counterparts
 others = p1
 
 Spec: # Specification in structured English
-environment starts with true
 robot starts with false
 
 left_gripper is set on (pickup_red1 or pickup_red2) and reset on drop_left
-if you are sensing red1 and you did not activate left_gripper and you are not activating drop_left then do pickup_red1
-if you are sensing red2 and you did not activate left_gripper and you are not activating drop_left then do pickup_red2
-if you activated left_gripper and you are sensing left_bin_clear then do drop_left
+do pickup_red1 if and only if you are sensing red1 and you are not activating left_gripper and you are not activating drop_left
+
+do pickup_red2 if and only if you are sensing red2 and not red1 and you are not activating left_gripper and you are not activating drop_left
+
+do drop_left if and only if you activated left_gripper and you are sensing left_bin_clear
 if you are activating left_gripper and you are not sensing left_bin_clear then do help
 
 right_gripper is set on (pickup_blue1 or pickup_blue2) and reset on drop_right
-if you are sensing blue1 and you did not activate right_gripper and you are not activating drop_right then do pickup_blue1
-if you are sensing blue2 and you did not activate right_gripper and you are not activating drop_right  then do pickup_blue2
-if you activated right_gripper and you are sensing right_bin_clear then do drop_right
-if you are activating right_gripper and you are not sensing right_bin_clear then do help
+do pickup_blue1 if and only if you are sensing blue1 and you are not activating right_gripper and you are not activating drop_right
 
-always !(pickup_blue1 and pickup_blue2)
-always !(pickup_red1 and pickup_red2)
-always !(pickup_red1 and drop_left)
-always !(pickup_red2 and drop_left)
-always !(pickup_blue1 and drop_right)
-always !(pickup_blue2 and drop_right)
+do pickup_blue2 if and only if you are sensing blue2 and not blue1 and you are not activating right_gripper and you are not activating drop_right
+
+do drop_right if and only if you activated right_gripper and you are sensing right_bin_clear
+if you are activating right_gripper and you are not sensing right_bin_clear then do help
 
