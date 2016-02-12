@@ -77,9 +77,17 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		if x:
 			obj_id, sb = x
 			position = sb.pose.position 
-			self.object_in_workspace( position )
-			#print object_id + ' observed'
+			# above min height
+			x,y,z = position.data
+			if z < 0.4:
+				print object_id + ' too low'
+				return False
 			return True
+			#if self.object_in_workspace( position ):
+			#	print object_id + ' close'
+			#	return True
+			#else:
+			#	print object_id + ' too far'
 		else:
 			return False
 
@@ -93,7 +101,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 	 	obj_id, sb = self.match_object( 'baxter-baxter-torso' )
 		torso_position = sb.pose.position
 		return self.test_spatial_relation( position , torso_position, 
-			test="near", min_threshold=0.0, max_threshold=1.0 )
+			test="near", min_threshold=0.0, max_threshold=0.85 )
 
 	def test_spatial_relation( self, position1, position2, test, min_threshold = 0, max_threshold=100, ):
 		"""
