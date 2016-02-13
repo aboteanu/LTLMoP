@@ -19,7 +19,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 
 		object_id (string) : object message id
 		'''
-		for k in range(10):
+		for k in range(100):
 			self.RocbotBaxterInitHandler.lc_sensor.handle()
 			if object_id == self.RocbotBaxterInitHandler.s_msg.id:
 				return ( object_id, self.RocbotBaxterInitHandler.s_msg.state_bodies[0] )
@@ -53,14 +53,17 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			obj_id1, sb1 = x
 			position1 = sb1.pose.position
 
-			for k in range(10):
+			for k in range(100):
 				self.RocbotBaxterInitHandler.lc_sensor.handle()
 				if 'baxter' in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
 					continue
 				for sb2 in self.RocbotBaxterInitHandler.s_msg.state_bodies:
+					if 'lid' not in sb2.id:
+						continue
 					position2 = sb2.pose.position
-					if ( self.test_spatial_relation( position1, position2, test="above", min_threshold=0.2, max_threshold=100 ) and 
-						self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=.4 ) ):
+					near = self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=.6 ) 
+					if near:
+						#print object_id + 'blocked by' + sb2.id
 						return False
 		#print object_id + ' clear'
 		return True		
