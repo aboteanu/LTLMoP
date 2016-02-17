@@ -49,13 +49,15 @@ robot starts with false
 right_gripper is set on (pickup_blue1 or pickup_blue2) and reset on drop_right
 left_gripper is set on (pickup_red1 or pickup_red2) and reset on drop_left
 
-do pickup_red1 if and only if you are sensing red1 and you are not activating left_gripper and you are not activating drop_left and you are not activating pickup_blue1 and you are not activating pickup_blue2 and you are not activating drop_right
-do pickup_red2 if and only if you are sensing red2 and not red1 and you are not activating left_gripper and you are not activating drop_left and you are not activating pickup_blue1 and you are not activating pickup_blue2 and you are not activating drop_right
-do drop_left if and only if you activated left_gripper and you are sensing left_bin_clear and you are not activating drop_right
+do pickup_red1 if and only if you are sensing red1 and you are not activating left_gripper 
+do pickup_red2 if and only if you are sensing red2 and not red1 and you are not activating left_gripper 
+do drop_left if and only if you activated left_gripper and you are sensing left_bin_clear 
 if you are activating left_gripper and you are not sensing left_bin_clear then do help
 
-do pickup_blue1 if and only if you are sensing blue1 and you are not activating right_gripper and you are not activating drop_right and you are not activating pickup_red1 and you are not activating pickup_red2 and you are not activating drop_left
-do pickup_blue2 if and only if you are sensing blue2 and not blue1 and you are not activating right_gripper and you are not activating drop_right and you are not activating pickup_red1 and you are not activating pickup_red2 and you are not activating drop_left
+do pickup_blue1 if and only if you are sensing blue1 and you are not activating right_gripper
+do pickup_blue2 if and only if you are sensing blue2 and not blue1 and you are not activating right_gripper
 do drop_right if and only if you activated right_gripper and you are sensing right_bin_clear
 if you are activating right_gripper and you are not sensing right_bin_clear then do help
+
+
 
