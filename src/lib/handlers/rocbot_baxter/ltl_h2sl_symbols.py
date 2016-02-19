@@ -29,3 +29,9 @@ object_colors = {
 	"OBJECT_COLOR_GREEN" : [ 3, "green"],
 }
 
+sensor_types = {
+	"SENSOR_TYPE_UNKNOWN" : [ 0, "na" ],
+	"SENSOR_TYPE_OBSERVED" : [ 1, "observed" ],
+	"SENSOR_TYPE_CLEAR" : [2, "clear" ]
+}
+

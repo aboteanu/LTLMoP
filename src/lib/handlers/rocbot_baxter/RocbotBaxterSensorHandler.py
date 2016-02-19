@@ -4,7 +4,6 @@ import sys
 import math
 import lcm
 
-import ltl_h2sl_symbols
 from rocbot import state_model_msg_t
 
 import lib.handlers.handlerTemplates as handlerTemplates
@@ -19,7 +18,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 
 		object_id (string) : object message id
 		'''
-		for k in range(100):
+		for k in range(50):
 			self.RocbotBaxterInitHandler.lc_sensor.handle()
 			if object_id == self.RocbotBaxterInitHandler.s_msg.id:
 				return ( object_id, self.RocbotBaxterInitHandler.s_msg.state_bodies[0] )
@@ -38,15 +37,14 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		x2, y2, z2 = body2
 		return math.sqrt( pow( x1 - x2, 2) + pow( y1 - y2, 2 ) + pow ( z1 - z2, 2 ) )
 
-	def sensor_type_clear(self, object_id, object_type, object_color, initial=False):
+	def sensor_type_clear(self, object_ids, initial=False):
 		"""
-		object_type (string): must be in object_types
-		object_color (string): must be in object_colors
-		object_id (string) : world object id
+		object_ids (list) : world object id
 		"""
 		if initial:
 			return False
-
+		# TODO this has to check just one object at the moment
+		object_id = object_ids[0]
 		x = self.match_object( object_id )
 		
 		if x:
@@ -68,31 +66,23 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		#print object_id + ' clear'
 		return True		
 
-	def sensor_type_observed(self, object_id, object_type, object_color, initial=False):
+	def sensor_type_observed(self, object_ids, initial=False):
 		"""
-		object_type (string): must be in object_types
-		object_color (string): must be in object_colors
-		object_id (string) : world object id
+		object_ids (list) : world object ids
 		"""
 		if initial:
 			return False
-		x = self.match_object( object_id )
-		if x:
-			obj_id, sb = x
-			position = sb.pose.position 
-			# above min height
-			x,y,z = position.data
-			if z < 0.4:
-				print object_id + ' too low'
-				return False
-			return True
-			#if self.object_in_workspace( position ):
-			#	print object_id + ' close'
-			#	return True
-			#else:
-			#	print object_id + ' too far'
-		else:
-			return False
+		for object_id in object_ids:
+			x = self.match_object( object_id )
+			if x:
+				obj_id, sb = x
+				position = sb.pose.position 
+				# above min height
+				x,y,z = position.data
+				if z < 0.4:
+					continue
+				return True
+		return False
 
 	def object_in_workspace( self, position ):
 		"""
