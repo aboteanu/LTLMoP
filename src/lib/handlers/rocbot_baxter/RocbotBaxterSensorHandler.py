@@ -88,8 +88,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		Test if an object given by (type, color) is in the workspace of the gripper ( values "left" or "right" ), do this by testing if it is within a set distance from the robot's body.
 
-		object_id (string) : world object id
-		gripper (string): possible values "left" or "right"
+		position (list) : a point in space
 		"""
 	 	obj_id, sb = self.match_object( 'baxter-baxter-torso' )
 		torso_position = sb.pose.position
