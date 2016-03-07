@@ -12,21 +12,6 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
 		self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_HANDLER']
 
-        def match_object( self, object_id ):
-                '''
-                test if this object is in the world
-
-                object_id (string) : object message id
-                '''
-                for k in range(50):
-                        self.RocbotBaxterInitHandler.lc_sensor.handle()
-                        if object_id == self.RocbotBaxterInitHandler.s_msg.id:
-                                return ( object_id, self.RocbotBaxterInitHandler.s_msg.state_bodies[0] )
-                        for sb in self.RocbotBaxterInitHandler.s_msg.state_bodies:
-                                if (object_id == sb.id):
-                                        return (object_id, sb)
-                return None
-
 	def within_workspace( baxter_sb, object_sb ):
 		'''
 		baxter_sb (dict) : baxter state body
@@ -53,12 +38,9 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			object_id = None
 			# first decide which object is withing reach
 			if len( object_ids ) > 1:
-				baxter_id, baxter_sb = self.match_object( 'baxter-baxter-torso' )
-				assert baxter_sb is not None
 				for x in object_ids:
-					temp_obj_id, temp_sb = self.match_object( x )
-					if temp_sb is not None and within_workspace( baxter_sb, temp_sb ):
-						object_id = temp_obj_id
+					if x in self.RocbotBaxterInitHandler.observed_objects:
+						object_id = x 
 						break
 					
 			else:
@@ -73,6 +55,8 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			action_type_str = ltl_h2sl_symbols.action_types[ action_type ][1]
 			action_msg.params = list()
 			action_msg.params.append( ( action_type_str, object_id ) )
+
+			print '###', action_type, object_id
 
 			self.RocbotBaxterInitHandler.lc_action.publish( "ACTION_ROCBOT", action_msg.encode() )
 

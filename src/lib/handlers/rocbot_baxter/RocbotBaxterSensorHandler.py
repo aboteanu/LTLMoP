@@ -81,6 +81,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 				x,y,z = position.data
 				if z < 0.4:
 					continue
+				self.RocbotBaxterInitHandler.observed_objects.append( obj_id )
 				return True
 		return False
 
