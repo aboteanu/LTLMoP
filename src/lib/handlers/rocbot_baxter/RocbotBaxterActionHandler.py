@@ -56,8 +56,6 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			action_msg.params = list()
 			action_msg.params.append( ( action_type_str, object_id ) )
 
-			print '###', action_type, object_id
-
 			self.RocbotBaxterInitHandler.lc_action.publish( "ACTION_ROCBOT", action_msg.encode() )
 
 			done_subscription = self.RocbotBaxterInitHandler.lc_done.subscribe( 
@@ -68,4 +66,7 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			self.RocbotBaxterInitHandler.lc_done.handle()
 
 			self.RocbotBaxterInitHandler.lc_done.unsubscribe( done_subscription )
+
+			if object_id in self.RocbotBaxterInitHandler.observed_objects:
+				self.RocbotBaxterInitHandler.observed_objects.remove( object_id )
 
