@@ -15,7 +15,8 @@ class RocbotBaxterInitHandler(handlerTemplates.InitHandler):
 				self.world_state_handler )
 
 		self.s_msg = None
-		self.observed_objects = list()
+		self.observed_objects = set()
+		self.processed_objects = set()
 
 	def getSharedData(self):
 		return { "ROCBOT_BAXTER_INIT_HANDLER" : self }
