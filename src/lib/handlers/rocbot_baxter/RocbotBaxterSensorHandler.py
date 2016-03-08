@@ -18,7 +18,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 
 		object_id (string) : object message id
 		'''
-		for k in range(50):
+		for k in range(100):
 			self.RocbotBaxterInitHandler.lc_sensor.handle()
 			if object_id == self.RocbotBaxterInitHandler.s_msg.id:
 				return ( object_id, self.RocbotBaxterInitHandler.s_msg.state_bodies[0] )
@@ -82,6 +82,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 				if z < 0.4:
 					continue
 				self.RocbotBaxterInitHandler.observed_objects.append( obj_id )
+                                print 'obseverd ' + object_id
 				return True
 		return False
 

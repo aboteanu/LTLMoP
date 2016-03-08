@@ -33,6 +33,7 @@ Sensors: # List of sensor propositions and their state (enabled = 1, disabled = 
 right_bin_clear, 1
 left_bin_clear, 1
 red, 1
+blue, 1
 
 
 ======== SPECIFICATION ========
@@ -46,4 +47,6 @@ left_gripper is set on pickup_left and reset on drop_left
 robot starts with false
 do drop_left if and only if you activated left_gripper and you are sensing left_bin_clear
 do pickup_left if and only if you are sensing red and you are not activating left_gripper
+do drop_right if and only if you activated right_gripper and you are sensing right_bin_clear
+do pickup_right if and only if you are sensing blue and you are not activating right_gripper
 
