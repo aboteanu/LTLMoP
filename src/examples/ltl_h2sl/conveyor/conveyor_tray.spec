@@ -35,7 +35,6 @@ tray_full, 1
 ======== SPECIFICATION ========
 
 Spec: # Specification in structured English
-environment starts with false
 robot starts with false
 
 left_gripper is set on pickup_from_side and reset on place_on_tray

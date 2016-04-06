@@ -37,6 +37,12 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		x2, y2, z2 = body2
 		return math.sqrt( pow( x1 - x2, 2) + pow( y1 - y2, 2 ) + pow ( z1 - z2, 2 ) )
 
+	def sensor_type_full(self, object_ids, initial=False):
+		"""
+		object_ids (list) : world object id
+		"""
+		return not self.sensor_type_clear(object_ids, initial)
+
 	def sensor_type_clear(self, object_ids, initial=False):
 		"""
 		object_ids (list) : world object id
@@ -61,9 +67,9 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 					position2 = sb2.pose.position
 					near = self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=.6 ) 
 					if near:
-						#print object_id + 'blocked by' + sb2.id
+						print object_id + 'blocked by' + sb2.id
 						return False
-		#print object_id + ' clear'
+		print object_id + ' clear'
 		return True		
 
 	def sensor_type_right( self, object_ids, initial=False ):
@@ -77,12 +83,14 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		x = self.match_object( object_id )
 
 		if x:
-			obj_id1, sb1 = X
+			obj_id1, sb1 = x 
 			position1 = sb1.pose.position
 			obj_id2, sb2 = self.match_object( 'baxter-baxter-torso' )
-			position2 == sb2.pose.position
+			position2 = sb2.pose.position
 
-			result = self.test_spatial_relation( position1, position2, test="right", min_threshold=0, max_threshold=.6 )
+			result = self.test_spatial_relation( position1, position2, test="right", min_threshold=0.1, max_threshold=0.1, offset=0.4)
+			print ' '.join(['###','right',object_id,str(result)])
+			return result
 
 		return False
 
@@ -97,12 +105,14 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		x = self.match_object( object_id )
 
 		if x:
-			obj_id1, sb1 = X
+			obj_id1, sb1 = x
 			position1 = sb1.pose.position
 			obj_id2, sb2 = self.match_object( 'baxter-baxter-torso' )
-			position2 == sb2.pose.position
+			position2 = sb2.pose.position
 
-			result = self.test_spatial_relation( position1, position2, test="left", min_threshold=0, max_threshold=.6 )
+			result = self.test_spatial_relation( position1, position2, test="left", min_threshold=0.1, max_threshold=0.1, offset=0.3)
+			print ' '.join(['###','left',object_id,str(result)])
+			return result
 
 		return False
 
@@ -141,10 +151,10 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			test="near", min_threshold=0.0, max_threshold=0.85 )
 
 
-	def test_spatial_relation( self, position1, position2, test, min_threshold = 0, max_threshold=100, ):
+	def test_spatial_relation( self, position1, position2, test, min_threshold = 0, max_threshold=100, offset=0.0):
 		"""
 		position1 (tuple) : dict 
-		position2 (tuple) :kdict 
+		position2 (tuple) : dict 
 		test (string) : type of test
 		min_threshold (float) : at least this far in one dimension
 		max_threshold (float) : limit distance for 'near' tests
@@ -154,17 +164,10 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		x2,y2,z2 = position2.data
 		# object 1 relative to object 2
 		if test == 'right':
-			return y1 > y2 + min_threshold
+			print y1-min_threshold, y2-offset,y1+max_threshold
+			return ( y1-min_threshold < y2-offset ) and ( y1+max_threshold > y2-offset )
 		elif test == 'left':
-			return y1 < y2 + min_threshold
-		elif test == 'front':
-			return x1 < x2 + min_threshold
-		elif test == 'back':
-			return x1 > x2 + min_threshold
-		elif test == 'above':
-			return z1 < z2 + min_threshold
-		elif test == 'under':
-			return z1 > z2 + min_threshold
+			return ( y1-min_threshold < y2+offset ) and ( y1+max_threshold > y2+offset )
 		elif test == 'near':
 			return ( self.distance_coord( (x1,y1,z1), (x2,y2,z2)) <= max_threshold ) 
 
