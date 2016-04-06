@@ -62,8 +62,8 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 				if 'baxter' in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
 					continue
 				for sb2 in self.RocbotBaxterInitHandler.s_msg.state_bodies:
-					if 'lid' not in sb2.id:
-						continue
+					#if 'lid' not in sb2.id:
+					#	continue
 					position2 = sb2.pose.position
 					near = self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=.6 ) 
 					if near:
@@ -89,7 +89,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			position2 = sb2.pose.position
 
 			result = self.test_spatial_relation( position1, position2, test="right", min_threshold=0.1, max_threshold=0.1, offset=0.4)
-			print ' '.join(['###','right',object_id,str(result)])
+			#print ' '.join(['###','right',object_id,str(result)])
 			return result
 
 		return False
@@ -111,7 +111,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			position2 = sb2.pose.position
 
 			result = self.test_spatial_relation( position1, position2, test="left", min_threshold=0.1, max_threshold=0.1, offset=0.3)
-			print ' '.join(['###','left',object_id,str(result)])
+			#print ' '.join(['###','left',object_id,str(result)])
 			return result
 
 		return False
@@ -135,7 +135,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 				if obj_id in self.RocbotBaxterInitHandler.processed_objects:
 					continue
 				self.RocbotBaxterInitHandler.observed_objects.add( obj_id )
-                                print 'obseverd ' + object_id
+                                #print 'obseverd ' + object_id
 				return True
 		return False
 
@@ -164,7 +164,6 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		x2,y2,z2 = position2.data
 		# object 1 relative to object 2
 		if test == 'right':
-			print y1-min_threshold, y2-offset,y1+max_threshold
 			return ( y1-min_threshold < y2-offset ) and ( y1+max_threshold > y2-offset )
 		elif test == 'left':
 			return ( y1-min_threshold < y2+offset ) and ( y1+max_threshold > y2+offset )
