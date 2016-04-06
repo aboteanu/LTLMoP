@@ -66,6 +66,47 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		#print object_id + ' clear'
 		return True		
 
+	def sensor_type_right( self, object_ids, initial=False ):
+		"""
+		object_ids (list) : object ids to test
+		"""
+		if initial:
+			return False
+		#TODO only check one object at a time 
+		object_id = object_ids[0]
+		x = self.match_object( object_id )
+
+		if x:
+			obj_id1, sb1 = X
+			position1 = sb1.pose.position
+			obj_id2, sb2 = self.match_object( 'baxter-baxter-torso' )
+			position2 == sb2.pose.position
+
+			result = self.test_spatial_relation( position1, position2, test="right", min_threshold=0, max_threshold=.6 )
+
+		return False
+
+	def sensor_type_left( self, object_ids, initial=False ):
+		"""
+		object_ids (list) : object ids to test
+		"""
+		if initial:
+			return False
+		#TODO only check one object at a time 
+		object_id = object_ids[0]
+		x = self.match_object( object_id )
+
+		if x:
+			obj_id1, sb1 = X
+			position1 = sb1.pose.position
+			obj_id2, sb2 = self.match_object( 'baxter-baxter-torso' )
+			position2 == sb2.pose.position
+
+			result = self.test_spatial_relation( position1, position2, test="left", min_threshold=0, max_threshold=.6 )
+
+		return False
+
+
 	def sensor_type_observed(self, object_ids, initial=False):
 		"""
 		object_ids (list) : world object ids
@@ -98,6 +139,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		torso_position = sb.pose.position
 		return self.test_spatial_relation( position , torso_position, 
 			test="near", min_threshold=0.0, max_threshold=0.85 )
+
 
 	def test_spatial_relation( self, position1, position2, test, min_threshold = 0, max_threshold=100, ):
 		"""
