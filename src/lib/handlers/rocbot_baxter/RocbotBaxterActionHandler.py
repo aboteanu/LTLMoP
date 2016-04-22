@@ -57,7 +57,8 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			action_msg.params.append( ( action_type_str, object_id ) )
 
                         print '###' + action_type_str + ' ' + object_id
-
+			# TODO wait for 2s for the scene to settle 
+			time.sleep(2)
 			self.RocbotBaxterInitHandler.lc_action.publish( "ACTION_ROCBOT", action_msg.encode() )
 
 			done_subscription = self.RocbotBaxterInitHandler.lc_done.subscribe( 
