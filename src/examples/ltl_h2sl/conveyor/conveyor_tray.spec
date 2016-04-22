@@ -29,7 +29,8 @@ right_gripper
 Sensors: # List of sensor propositions and their state (enabled = 1, disabled = 0)
 tray_on_right, 1
 tray_on_left, 1
-tray_full, 1
+tray_clear, 1
+have_object, 1
 
 
 ======== SPECIFICATION ========
@@ -40,9 +41,10 @@ robot starts with false
 left_gripper is set on pickup_from_side and reset on place_on_tray
 right_gripper is set on pickup_from_tray and reset on drop_in_bin
 
-do pickup_from_tray if and only if you are sensing tray_on_right and you are sensing tray_full and you are not activating right_gripper
-do pickup_from_side if and only if you are sensing tray_on_left and you are not activating left_gripper
+do pickup_from_tray if and only if you are sensing tray_on_right and you are not sensing tray_clear and you are not activating right_gripper
+#do pickup_from_side if and only if you are sensing tray_on_left and you are not activating left_gripper
+if you are sensing have_object and you are not activating left_gripper then do pickup_from_side
 
 if you are activated right_gripper then do drop_in_bin
-if you activated left_gripper and you are sensing tray_on_left then do place_on_tray
+do place_on_tray if and only if you activated left_gripper and you are sensing tray_on_left and you are sensing tray_clear
 

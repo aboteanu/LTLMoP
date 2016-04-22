@@ -18,7 +18,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 
 		object_id (string) : object message id
 		'''
-		for k in range(100):
+		for k in range(50):
 			self.RocbotBaxterInitHandler.lc_sensor.handle()
 			if object_id == self.RocbotBaxterInitHandler.s_msg.id:
 				return ( object_id, self.RocbotBaxterInitHandler.s_msg.state_bodies[0] )
@@ -37,19 +37,14 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		x2, y2, z2 = body2
 		return math.sqrt( pow( x1 - x2, 2) + pow( y1 - y2, 2 ) + pow ( z1 - z2, 2 ) )
 
-	def sensor_type_full(self, object_ids, initial=False):
+	def sensor_type_clear(self, object_ids, max_thr=0.6, initial=False):
 		"""
 		object_ids (list) : world object id
-		"""
-		return not self.sensor_type_clear(object_ids, initial)
-
-	def sensor_type_clear(self, object_ids, initial=False):
-		"""
-		object_ids (list) : world object id
+		max_thr (float) : max distance to check
 		"""
 		if initial:
 			return False
-		# TODO this has to check just one object at the moment
+		# TODO check one object only
 		object_id = object_ids[0]
 		x = self.match_object( object_id )
 		
@@ -57,7 +52,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			obj_id1, sb1 = x
 			position1 = sb1.pose.position
 
-			for k in range(100):
+			for k in range(50):
 				self.RocbotBaxterInitHandler.lc_sensor.handle()
 				if 'baxter' in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
 					continue
@@ -65,12 +60,18 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 					#if 'lid' not in sb2.id:
 					#	continue
 					position2 = sb2.pose.position
-					near = self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=.6 ) 
+
+					# ignore objects underneath
+					x1,y1,z1 = position1.data
+					x2,y2,z2 = position2.data
+					if z2 < z1:
+						continue 
+					# test relation			
+					near = self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=max_thr )  
 					if near:
 						print object_id + 'blocked by' + sb2.id
 						return False
-		print object_id + ' clear'
-		return True		
+		return True
 
 	def sensor_type_right( self, object_ids, initial=False ):
 		"""
@@ -89,7 +90,6 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			position2 = sb2.pose.position
 
 			result = self.test_spatial_relation( position1, position2, test="right", min_threshold=0.1, max_threshold=0.1, offset=0.4)
-			#print ' '.join(['###','right',object_id,str(result)])
 			return result
 
 		return False
@@ -111,7 +111,6 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			position2 = sb2.pose.position
 
 			result = self.test_spatial_relation( position1, position2, test="left", min_threshold=0.1, max_threshold=0.1, offset=0.3)
-			#print ' '.join(['###','left',object_id,str(result)])
 			return result
 
 		return False
