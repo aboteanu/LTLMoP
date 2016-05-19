@@ -858,25 +858,8 @@ class SpecCompiler(object):
 
 
     def _getPicosatCommand(self):
-        # look for picosat
-        paths = [p for p in glob.glob(os.path.join(self.proj.ltlmop_root,"lib","cores","picosat-*")) if os.path.isdir(p)]
-        if len(paths) == 0:
-            logging.error("Where is your sat solver? We use Picosat.")
-            # TODO: automatically compile for the user
-            return None
-        else:
-            logging.debug("Found Picosat in " + paths[0])
-
-        if os.name == "nt":
-            cmd = os.path.join(paths[0],"picomus.exe")
-        else:
-            cmd = [os.path.join(paths[0],"picomus")]
-            
-        return cmd
-
-
-
-
+	# don't look for it here, just use the one installed 
+        return "/usr/bin/picomus"
 
     def ltlConjunctsFromBadLines(self, to_highlight, useInitFlag):
         #given the lines to be highlighted by the initial analysis in _analyze(),
