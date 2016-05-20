@@ -22,6 +22,9 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 		dist = math.sqrt( pow( x1 - x2, 2) + pow( y1 - y2, 2 ) + pow ( z1 - z2, 2 ) )
 		return dist < 0.85
 
+	def generate_feedback_help( object_ids ):
+		# TODO use flags from RocbotInitHandler 
+
 	def action_dispatch( self, gripper, action_type, object_ids, actuatorVal, initial=False):
 		"""
 		Execute an action on one object
@@ -35,6 +38,9 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			return False
 
 		if actuatorVal == True:
+			if action_type="help":
+				#TODO 
+				self.generate_feedback_help( object_ids )
 			object_id = None
 			# first decide which object is withing reach
 			if len( object_ids ) > 1:
