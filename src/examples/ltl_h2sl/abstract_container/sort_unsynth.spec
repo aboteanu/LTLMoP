@@ -53,9 +53,11 @@ if you are sensing cube_blue and you are sensing row_blue and you are not activa
 
 do drop_left if and only if you activated left_gripper and you are sensing left_bin_clear
 
-do drop_right if and only if you activated right_gripper and you are sensing right_bin_clear 
+do drop_right if and only if you activated right_gripper and you are sensing right_bin_clear
 
 do help if and only if you are activating right_gripper and you are not sensing right_bin_clear
-do help if and only if you are activating left_gripper and you are not sensing left_bin_clear 
+do help if and only if you are activating left_gripper and you are not sensing left_bin_clear
 
+#always right_bin_clear
+#always left_bin_clear
 
