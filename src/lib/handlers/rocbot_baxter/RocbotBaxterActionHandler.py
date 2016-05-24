@@ -7,23 +7,16 @@ import ltl_h2sl_symbols
 from rocbot import empty_msg_t
 from nsf_nri_mvli import action_msg_t
 
+import RocbotFeedbackHandler as feedback
 
 class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
 		self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_HANDLER']
 
-	def within_workspace( baxter_sb, object_sb ):
-		'''
-		baxter_sb (dict) : baxter state body
-		object_sb (dict) : object to test
-		'''
-		bx, by, bz = baxter_sb.pose.position
-		ox, oy, oz = object_sb.pose.position
-		dist = math.sqrt( pow( x1 - x2, 2) + pow( y1 - y2, 2 ) + pow ( z1 - z2, 2 ) )
-		return dist < 0.85
-
 	def generate_feedback_help( object_ids ):
 		# TODO use flags from RocbotInitHandler 
+                observed = self.RocbotBaxterInitHandler.sensor_observed_flags 
+                clear = self.RocbotBaxterInitHandler.sensor_clear_flags 
 
 	def action_dispatch( self, gripper, action_type, object_ids, actuatorVal, initial=False):
 		"""
@@ -38,7 +31,7 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			return False
 
 		if actuatorVal == True:
-			if action_type="help":
+			if action_type=="help":
 				#TODO 
 				self.generate_feedback_help( object_ids )
 			object_id = None
