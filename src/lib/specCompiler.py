@@ -775,7 +775,7 @@ class SpecCompiler(object):
         cyc_enc = True 
 
         if unsat:
-            guilty = self.unsatCores(cmd, topo,badInit,conjuncts,10,1)#returns LTL conjuncts
+            guilty = self.unsatCores(cmd, topo,badInit,conjuncts,1000,1)#returns LTL conjuncts
         else:
             if counterTraces:
                 guilty = self.unrealCores(cmd, topo, badInit, badStatesLTL, conjuncts, deadlockFlag, desiredGoalCycles,counterTraces,cyc_enc)#returns LTL conjuncts   
@@ -859,7 +859,8 @@ class SpecCompiler(object):
 
     def _getPicosatCommand(self):
 	# don't look for it here, just use the one installed 
-        return "/usr/bin/picomus"
+        #return "/usr/bin/picomus"
+        return "/usr/bin/picosat.trace"
 
     def ltlConjunctsFromBadLines(self, to_highlight, useInitFlag):
         #given the lines to be highlighted by the initial analysis in _analyze(),

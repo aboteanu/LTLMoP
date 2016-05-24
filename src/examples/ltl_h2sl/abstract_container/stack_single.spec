@@ -44,7 +44,7 @@ gripper is set on pickup and reset on (place or place_start)
 if you are sensing cube and you are not activating gripper then do pickup
 
 if you are sensing stack_empty and you activated gripper then do place_start
-if you are not sensing stack_empty and you activated gripper then do place
+if you are not sensing stack_empty and you are sensing stack_stable and you activated gripper then do place
 
 do help if and only if you are sensing stack_stable
 
