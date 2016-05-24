@@ -29,7 +29,7 @@ Sensors: # List of sensor propositions and their state (enabled = 1, disabled = 
 cube, 1
 row, 1
 stack_empty, 1
-stack_unstable, 1
+stack_stable, 1
 
 
 ======== SPECIFICATION ========
@@ -47,5 +47,5 @@ if you are sensing row and you are sensing cube and you are not activating gripp
 if you are sensing stack_empty and you activated gripper then do place_start
 if you are not sensing stack_empty and you activated gripper then do place
 
-do help if and only if you are sensing stack_unstable
+do help if and only if you are not sensing stack_stable
 

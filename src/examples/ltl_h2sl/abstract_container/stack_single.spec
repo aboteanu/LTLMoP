@@ -20,7 +20,7 @@ fastslow: False
 decompose: True
 
 CurrentConfigName:
-rocbot_baxter
+simulation_stack_single
 
 Customs: # List of custom propositions
 gripper
@@ -28,7 +28,7 @@ gripper
 Sensors: # List of sensor propositions and their state (enabled = 1, disabled = 0)
 cube, 1
 stack_empty, 1
-stack_unstable, 1
+stack_stable, 1
 
 
 ======== SPECIFICATION ========
@@ -46,5 +46,5 @@ if you are sensing cube and you are not activating gripper then do pickup
 if you are sensing stack_empty and you activated gripper then do place_start
 if you are not sensing stack_empty and you activated gripper then do place
 
-do help if and only if you are sensing stack_unstable
+do help if and only if you are sensing stack_stable
 

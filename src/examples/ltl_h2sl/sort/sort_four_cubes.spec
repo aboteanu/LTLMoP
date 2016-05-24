@@ -21,7 +21,7 @@ fastslow: False
 decompose: True
 
 CurrentConfigName:
-rocbot_baxter
+simulation
 
 Customs: # List of custom propositions
 left_gripper
