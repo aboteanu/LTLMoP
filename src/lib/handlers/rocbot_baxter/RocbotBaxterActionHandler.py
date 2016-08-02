@@ -13,11 +13,6 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
 		self.RocbotBaxterInitHandler = shared_data['ROCBOT_BAXTER_INIT_HANDLER']
 
-	def generate_feedback_help( object_ids ):
-		# TODO use flags from RocbotInitHandler 
-                observed = self.RocbotBaxterInitHandler.sensor_observed_flags 
-                clear = self.RocbotBaxterInitHandler.sensor_clear_flags 
-
 	def action_dispatch( self, gripper, action_type, object_ids, actuatorVal, initial=False):
 		"""
 		Execute an action on one object
@@ -32,8 +27,8 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 
 		if actuatorVal == True:
 			if action_type=="help":
-				#TODO 
-				self.generate_feedback_help( object_ids )
+				#TODO generate feedback
+				pass
 			object_id = None
 			# first decide which object is withing reach
 			if len( object_ids ) > 1:
@@ -55,8 +50,7 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			action_msg.params = list()
 			action_msg.params.append( ( action_type_str, object_id ) )
 
-                        print '###' + action_type_str + ' ' + object_id
-			# TODO wait for 2s for the scene to settle 
+			# wait for 2s for the scene to settle 
 			time.sleep(2)
 			self.RocbotBaxterInitHandler.lc_action.publish( "ACTION_ROCBOT", action_msg.encode() )
 
@@ -67,8 +61,6 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			if object_id in self.RocbotBaxterInitHandler.observed_objects:	
 				self.RocbotBaxterInitHandler.observed_objects.remove( object_id )
 				self.RocbotBaxterInitHandler.processed_objects.add( object_id )
-				print '###', self.RocbotBaxterInitHandler.observed_objects, object_id
-
 
 			print 'Waiting'
 			self.RocbotBaxterInitHandler.lc_done.handle()

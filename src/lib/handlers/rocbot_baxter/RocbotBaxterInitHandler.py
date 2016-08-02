@@ -18,10 +18,6 @@ class RocbotBaxterInitHandler(handlerTemplates.InitHandler):
 		self.observed_objects = set()
 		self.processed_objects = set()
 
-		# mark sensor activations per object in order to generate feedback
-		self.sensor_observed_flags = dict()
-		self.sensor_clear_flags = dict()
-
 	def getSharedData(self):
 		return { "ROCBOT_BAXTER_INIT_HANDLER" : self }
 

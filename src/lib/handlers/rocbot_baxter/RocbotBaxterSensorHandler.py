@@ -70,9 +70,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 					near = self.test_spatial_relation( position1, position2, test="near", min_threshold=0, max_threshold=max_thr )  
 					if near:
 						print object_id + 'blocked by' + sb2.id
-						self.RocbotBaxterInitHandler.sensor_clear_flags[ object_id ] = False
 						return False
-		self.RocbotBaxterInitHandler.sensor_clear_flags[ object_id ] = True
 		return True
 
 	def sensor_type_right( self, object_ids, initial=False ):
@@ -117,6 +115,20 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 
 		return False
 
+	def sensor_type_in_world( self, object_ids, initial=False ):
+		"""
+		just like observed, except it  only checks if the object is in the world
+		object_ids (list) : world object ids
+		"""
+		if initial:
+			return False
+		for object_id in object_ids:
+			object_present_in_world[ object_id ] = False
+			x = self.match_object( object_id )
+			if x:
+				return True
+		return False
+				
 
 	def sensor_type_observed(self, object_ids, initial=False):
 		"""
@@ -124,7 +136,6 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		"""
 		if initial:
 			return False
-		self.RocbotBaxterInitHander.sensor_observed_flags = dict() 
 		for object_id in object_ids:
 			object_present_in_world[ object_id ] = False
 			x = self.match_object( object_id )
@@ -138,7 +149,6 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 				if z > 0.4 and self.object_in_workspace( position ):
 					self.RocbotBaxterInitHandler.observed_objects.add( obj_id )
 					return True
-				self.RocbotBaxterInitHander.sensor_observed_flags[ object_id ] = True
 		return False
 
 	def object_in_workspace( self, position ):

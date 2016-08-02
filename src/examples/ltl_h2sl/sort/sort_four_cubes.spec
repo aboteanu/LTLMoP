@@ -7,9 +7,9 @@
 Actions: # List of action propositions and their state (enabled = 1, disabled = 0)
 drop_left, 1
 drop_right, 1
-help, 1
 pickup_right, 1
 pickup_left, 1
+help, 1
 
 CompileOptions:
 convexify: True
@@ -42,19 +42,12 @@ others = p1
 Spec: # Specification in structured English
 robot starts with false
 
-right_gripper is set on pickup_right and reset on drop_right
-left_gripper is set on pickup_left and reset on drop_left
+#right_gripper is set on pickup_right and reset on drop_right
+#left_gripper is set on pickup_left and reset on drop_left
 
-if you are sensing red and you are not activating left_gripper then do pickup_left
-do drop_left if and only if you activated left_gripper and you are sensing left_bin_clear
-do help if and only if you are activating left_gripper and you are not sensing left_bin_clear
+do drop_right if and only if you activated right_gripper 
+# and you are sensing right_bin_clear
 
-if you are sensing blue and you are not activating right_gripper then do pickup_right
-do drop_right if and only if you activated right_gripper and you are sensing right_bin_clear
-do help if and only if you are activating right_gripper and you are not sensing right_bin_clear
+infinitely often drop_right
 
-always right_bin_clear
-always left_bin_clear
-#always red
-#always blue
 

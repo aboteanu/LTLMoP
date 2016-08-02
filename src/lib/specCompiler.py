@@ -860,7 +860,7 @@ class SpecCompiler(object):
     def _getPicosatCommand(self):
 	# don't look for it here, just use the one installed 
         #return "/usr/bin/picomus"
-        return "/usr/bin/picosat.trace"
+        return "/home/adrian/picosat-965/picomus"
 
     def ltlConjunctsFromBadLines(self, to_highlight, useInitFlag):
         #given the lines to be highlighted by the initial analysis in _analyze(),
