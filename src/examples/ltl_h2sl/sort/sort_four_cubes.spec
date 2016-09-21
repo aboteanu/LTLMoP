@@ -42,12 +42,8 @@ others = p1
 Spec: # Specification in structured English
 robot starts with false
 
-#right_gripper is set on pickup_right and reset on drop_right
-#left_gripper is set on pickup_left and reset on drop_left
+environment starts with blue and right_bin_clear
 
-do drop_right if and only if you activated right_gripper 
-# and you are sensing right_bin_clear
-
-infinitely often drop_right
-
+if you are not sensing blue or you activated right_gripper then do not pickup_right
+infinitely often pickup_right
 

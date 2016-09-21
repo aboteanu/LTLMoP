@@ -1,21 +1,16 @@
 action_types = {
-	"ACTION_TYPE_UNKNOWN" : [ 0, "na"],
-	"ACTION_TYPE_PICKUP" : [ 1, "pick_object", "pickup", "take"],
-	"ACTION_TYPE_DROP" : [ 2, "drop" ],
-	"ACTION_TYPE_INSERT" : [ 3, "insert" ],
-	"ACTION_TYPE_PLACE" : [ 4, "place" ],
-	"ACTION_TYPE_HANDOFF" : [ 5, "handoff" ],
-	"ACTION_TYPE_INTERVENTION" : [ 6, "intervention" ]
+	"na" : [ 0, "na"],
+	"pickup" : [ 1, "pick_object", "pickup", "take"],
+	"drop" : [ 2, "drop" ],
+	"help" : [ 6, "intervention" ]
 	}
 
 object_types = {
-	"OBJECT_TYPE_UNKNOWN" : [ 0, "na" ],
-	"OBJECT_TYPE_CUBE" : [ 1, "cube"],
-	"OBJECT_TYPE_U_BLOCK" : [ 2, "left u-blueu-blueu-center", "right u-redu-redu-center"],
-	"OBJECT_TYPE_HOLDER" : [ 3, "ubar-ubar-ubar-6"],
-	"OBJECT_TYPE_BIN" : [ 4, "bin"],
-	"OBJECT_TYPE_TRAY" : [ 5, "tray"],
-	"OBJECT_TYPE_TABLE" : [ 6, "table"],
+	"na" : [ 0, "na" ],
+	"cube" : [ 1, "cube"],
+	"bin" : [ 4, "bin"],
+	"tray" : [ 5, "tray"],
+	"table" : [ 6, "table"],
 	"OBJECT_TYPE_ROBOT_TORSO" : [ 7, "baxter-baxter-torso"],
 	"OBJECT_TYPE_ROBOT_LEFT_HAND" : [ 8, "baxter-baxter-right_gripper"],
 	"OBJECT_TYPE_ROBOT_RIGHT_HAND" : [ 9, "baxter-baxter-left_gripper"],
@@ -23,15 +18,15 @@ object_types = {
 
 
 object_colors = {
-	"OBJECT_COLOR_UNKNOWN" : [ 0, "na" ],
-	"OBJECT_COLOR_RED" : [ 1, "red"],
-	"OBJECT_COLOR_BLUE" : [ 2, "blue"],
-	"OBJECT_COLOR_GREEN" : [ 3, "green"],
+	"na" : [ 0, "na" ],
+	"red" : [ 1, "red"],
+	"blue" : [ 2, "blue"],
+	"green" : [ 3, "green"],
 }
 
 sensor_types = {
-	"SENSOR_TYPE_UNKNOWN" : [ 0, "na" ],
-	"SENSOR_TYPE_OBSERVED" : [ 1, "observed" ],
-	"SENSOR_TYPE_CLEAR" : [2, "clear" ]
+	"na" : [ 0, "na" ],
+	"observed" : [ 1, "observed" ],
+	"clear" : [2, "clear" ]
 }
 

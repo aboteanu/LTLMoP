@@ -7,7 +7,6 @@ import ltl_h2sl_symbols
 from rocbot import empty_msg_t
 from nsf_nri_mvli import action_msg_t
 
-import RocbotFeedbackHandler as feedback
 
 class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 	def __init__(self,executor,shared_data):
@@ -31,16 +30,17 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 				pass
 			object_id = None
 			# first decide which object is withing reach
-			if len( object_ids ) > 1:
-				for x in object_ids:
-					if x in self.RocbotBaxterInitHandler.observed_objects:
-						object_id = x 
-						break
-					
-			else:
-				object_id = object_ids[0] 
+			#if len( object_ids ) > 1:
+			#	for x in object_ids:
+			#		if x in self.RocbotBaxterInitHandler.observed_objects:
+			#			object_id = x 
+			#			break
+			#		
+			#else:
+			#	object_id = object_ids[0] 
+			object_id = object_ids[1] 
 
-			assert object_id is not None # fail if nothing is found
+			#assert object_id is not None # fail if nothing is found
 
 			# now send the action message
 			action_msg = action_msg_t()

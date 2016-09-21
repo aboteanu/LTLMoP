@@ -131,6 +131,7 @@ class ExecutorStrategyExtensions(object):
         sensor_state = {}
         for sensor in self.proj.enabled_sensors:
             sensor_state[sensor]  = eval(self.proj.sensor_handler[sensor], {'self':self,'initial':False})
+	self.postEvent( "INFO", "Sensor " + sensor + " = " + sensor_state[sensor] )
         return sensor_state
 
     def HSubSetActuatorValue(self, actuatorName, setValue):
