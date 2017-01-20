@@ -1,8 +1,11 @@
 action_types = {
 	"na" : [ 0, "na"],
 	"pickup" : [ 1, "pick_object", "pickup", "take"],
+	"ACTION_TYPE_PICKUP" : [ 1, "pick_object", "pickup", "take"],
 	"drop" : [ 2, "drop" ],
-	"help" : [ 6, "intervention" ]
+	"ACTION_TYPE_DROP" : [ 2, "drop" ],
+	"help" : [ 6, "intervention" ],
+	"ACTION_TYPE_INTERVENTION" : [ 6, "intervention" ]
 	}
 
 object_types = {
