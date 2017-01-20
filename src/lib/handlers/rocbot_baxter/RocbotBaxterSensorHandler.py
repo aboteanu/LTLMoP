@@ -19,10 +19,12 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 
 		object_id (string) : object message id
 		'''
-		#for k in range(50):
-		for k in range(10):
+		for k in range(50):
+		#for k in range(10):
                         #print 'handle state_model_msg_t'
 			self.RocbotBaxterInitHandler.lc_sensor.handle()
+                        print "s_msg.id", self.RocbotBaxterInitHandler.s_msg.id
+                        print "object_id", object_id
 			if object_id == self.RocbotBaxterInitHandler.s_msg.id:
 				return ( object_id, self.RocbotBaxterInitHandler.s_msg.state_bodies[0] )
 			for sb in self.RocbotBaxterInitHandler.s_msg.state_bodies:
@@ -56,7 +58,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			position1 = sb1.pose.position
 
 			#for k in range(50):
-			for k in range(10):
+			for k in range(50):
                                 
 				self.RocbotBaxterInitHandler.lc_sensor.handle()
 				if 'baxter' in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
