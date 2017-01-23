@@ -42,6 +42,59 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		x2, y2, z2 = body2
 		return math.sqrt( pow( x1 - x2, 2) + pow( y1 - y2, 2 ) + pow ( z1 - z2, 2 ) )
 
+	def sensor_type_stacked( self, object_ids, initial=False ):
+		'''
+		Check if the cube is above another cube
+		object_ids (list) : cube ids to check
+		'''
+		if initial:
+			return False
+		object_id = object_ids[0]
+		x = self.match_object( object_id )
+
+		if x:
+			obj_id1, sb1 = x
+			position1 = sb1.pose.position
+			for k in range(50):
+				self.RocbotBaxterInitHandler.lc_sensor.handle()
+				if 'cube' not in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
+					continue
+				for sb2 in self.RocbotBaxterInitHandler.s_msg.state_bodies:
+					position2 = sb2.pose.position
+					x1,y1,z1 = position1.data
+					x2,y2,z2 = position2.data
+					stacked = self.test_spatial_relation( position1, position2, test="above", min_threshold=0.1, max_threshold=0.3)  
+					if stacked:
+						print "stacked true" + sb2.id
+						return True
+		return True
+
+	def sensor_type_understack( self, object_ids, initial=False ):
+		'''
+		Check if the cube is above another cube, the inverse of stacked
+		object_ids (list) : cube ids to check
+		'''
+		if initial:
+			return False
+		object_id = object_ids[0]
+		x = self.match_object( object_id )
+
+		if x:
+			obj_id1, sb1 = x
+			position1 = sb1.pose.position
+			for k in range(50):
+				self.RocbotBaxterInitHandler.lc_sensor.handle()
+				if 'cube' not in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
+					continue
+				for sb2 in self.RocbotBaxterInitHandler.s_msg.state_bodies:
+					position2 = sb2.pose.position
+					x1,y1,z1 = position1.data
+					x2,y2,z2 = position2.data
+					stacked = self.test_spatial_relation( position1, position2, test="under", min_threshold=0.1, max_threshold=0.3)  
+					if stacked:
+						print "under stack true" + sb2.id
+						return True
+
 	def sensor_type_clear(self, object_ids, max_thr=1.0, initial=False):
 		"""
 		object_ids (list) : world object id
@@ -57,28 +110,22 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			obj_id1, sb1 = x
 			position1 = sb1.pose.position
 
-			#for k in range(50):
 			for k in range(50):
-                                
 				self.RocbotBaxterInitHandler.lc_sensor.handle()
-				if 'baxter' in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
+				if 'lid' not in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
 					continue
 				for sb2 in self.RocbotBaxterInitHandler.s_msg.state_bodies:
 					position2 = sb2.pose.position
-					# ignore objects underneath
 					x1,y1,z1 = position1.data
 					x2,y2,z2 = position2.data
-                                        #print "position1", x1, ", ", y1, ", ", z1
-                                        #print "position2", x2, ", ", y2, ", ", z2
+					# ignore objects underneath
 					if z2 < z1:
 						continue 
 					if not max_thr: # TODO what sets this to none sometimes?
 						max_thr = 1.0 
 
-					#near = self.test_spatial_relation( position1, position2, test="above", min_threshold=0.3, max_threshold=max_thr )  
-					#near = self.test_spatial_relation( position1, position2, test="above", min_threshold=0.0, max_threshold=max_thr )  
 					near = self.test_spatial_relation( position1, position2, test="near", min_threshold=0.0, max_threshold=max_thr )  
-					if near and ("lid" in sb2.id):
+					if near:
                                                 print "false " + sb2.id
 						return False
                 print "true " + obj_id1
@@ -194,4 +241,6 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			return ( self.distance_coord( (x1,y1,z1), (x2,y2,z2)) <= max_threshold ) 
 		elif test == 'above': 
 			return ( abs( x1 - x2 ) < min_threshold ) and ( abs( y1 -y2 ) < min_threshold ) and ( ( z2 - z1 ) > 0 ) and ( ( z2 - z1 ) < max_threshold ) 
+		elif test == 'under': 
+			return ( abs( x1 - x2 ) < min_threshold ) and ( abs( y1 -y2 ) < min_threshold ) and ( ( z2 - z1 ) > 0 ) and ( ( z1 - z2 ) < max_threshold ) 
 		return False

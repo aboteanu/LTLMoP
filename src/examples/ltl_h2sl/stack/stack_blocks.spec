@@ -8,8 +8,9 @@ Actions: # List of action propositions and their state (enabled = 1, disabled = 
 pickup_robot_right_hand_red, 1
 pickup_robot_right_hand_green, 1
 pickup_robot_right_hand_blue, 1
-pickup_robot_right_hand_yellow, 1
-drop_on_stack_robot_right_hand, 1
+drop_robot_right_hand_red, 1
+drop_robot_right_hand_blue, 1
+drop_robot_right_hand_green, 1
 
 CompileOptions:
 convexify: True
@@ -29,16 +30,13 @@ right_gripper
 Sensors: # List of sensor propositions and their state (enabled = 1, disabled = 0)
 observed_cube_red, 1
 stacked_cube_red, 1
-covered_cube_red, 1
+understack_cube_red, 1
 observed_cube_blue, 1
 stacked_cube_blue, 1
-covered_cube_blue, 1
+understack_cube_blue, 1
 observed_cube_green, 1
 stacked_cube_green, 1
-covered_cube_green, 1
-observed_cube_yellow, 1
-stacked_cube_yellow, 1
-covered_cube_yellow, 1
+understack_cube_green, 1
 
 
 ======== SPECIFICATION ========
@@ -50,30 +48,24 @@ environment starts with false
 infinitely often observed_cube_red
 infinitely often observed_cube_blue
 infinitely often observed_cube_green
-infinitely often observed_cube_yellow
 
-right_gripper is set on ( pickup_robot_right_hand_red or pickup_robot_right_hand_blue or pickup_robot_right_hand_green or pickup_robot_right_hand_yellow ) and reset on drop_on_stack_robot_right_hand
+right_gripper is set on ( pickup_robot_right_hand_red or pickup_robot_right_hand_blue or pickup_robot_right_hand_green ) and reset on ( drop_robot_right_hand_red or drop_robot_right_hand_blue or drop_robot_right_hand_green )
 
 #pick up red cubes
-if you are not sensing observed_cube_red and you are not sensing stacked_cube_red and you are not sensing covered_cube_red or you activated right_gripper then do not pickup_robot_right_hand_red
+if you are not sensing observed_cube_red and you are not sensing stacked_cube_red and you are not sensing understack_cube_red or you activated right_gripper then do not pickup_robot_right_hand_red
 
 #pick up blue cubes
-if you are not sensing observed_cube_blue and you are not sensing stacked_cube_blue and you are not sensing covered_cube_blue or you activated right_gripper then do not pickup_robot_right_hand_blue
+if you are not sensing observed_cube_blue and you are not sensing stacked_cube_blue and you are not sensing understack_cube_blue or you activated right_gripper then do not pickup_robot_right_hand_blue
 
 #pick up green cubes
-if you are not sensing observed_cube_green and you are not sensing stacked_cube_green and you are not sensing covered_cube_green or you activated right_gripper then do not pickup_robot_right_hand_green
-
-#pick up yellow cubes
-if you are not sensing observed_cube_yellow and you are not sensing stacked_cube_yellow and you are not sensing covered_cube_yellow or you activated right_gripper then do not pickup_robot_right_hand_yellow
-
-infinitely often pickup_robot_right_hand_red
-infinitely often pickup_robot_right_hand_blue
-infinitely often pickup_robot_right_hand_green
-infinitely often pickup_robot_right_hand_yellow
+if you are not sensing observed_cube_green and you are not sensing stacked_cube_green and you are not sensing understack_cube_green or you activated right_gripper then do not pickup_robot_right_hand_green
 
 #place stuff on the stack
-if you did not activate right_gripper then do not drop_on_stack_robot_right_hand
-infinitely often drop_on_stack_robot_right_hand
+if you did not activate right_gripper then do not drop_robot_right_hand_red
+if you did not activate right_gripper then do not drop_robot_right_hand_blue
+if you did not activate right_gripper then do not drop_robot_right_hand_green
 
 #conditions to impose a stack order
+infinitely often pickup_robot_right_hand_red
+infinitely often drop_robot_right_hand_blue
 
