@@ -48,22 +48,25 @@ environment starts with false
 infinitely often observed_cube_red
 infinitely often observed_cube_blue
 infinitely often observed_cube_green
+infinitely often( not understack_cube_red)
+infinitely often( not understack_cube_blue)
+infinitely often( not understack_cube_green)
 
 right_gripper is set on ( pickup_robot_right_hand_red or pickup_robot_right_hand_blue or pickup_robot_right_hand_green ) and reset on ( drop_robot_right_hand_red or drop_robot_right_hand_blue or drop_robot_right_hand_green )
 
 #pick up red cubes
-if you are not sensing observed_cube_red and you are not sensing stacked_cube_red and you are not sensing understack_cube_red or you activated right_gripper then do not pickup_robot_right_hand_red
+if you are not sensing observed_cube_red or you are sensing understack_cube_red or you activated right_gripper then do not pickup_robot_right_hand_red
 
 #pick up blue cubes
-if you are not sensing observed_cube_blue and you are not sensing stacked_cube_blue and you are not sensing understack_cube_blue or you activated right_gripper then do not pickup_robot_right_hand_blue
+if you are not sensing observed_cube_blue or you are sensing understack_cube_blue or you activated right_gripper then do not pickup_robot_right_hand_blue
 
 #pick up green cubes
-if you are not sensing observed_cube_green and you are not sensing stacked_cube_green and you are not sensing understack_cube_green or you activated right_gripper then do not pickup_robot_right_hand_green
+if you are not sensing observed_cube_green or you are sensing understack_cube_green or you activated right_gripper then do not pickup_robot_right_hand_green
 
 #place stuff on the stack
-if you did not activate right_gripper then do not drop_robot_right_hand_red
-if you did not activate right_gripper then do not drop_robot_right_hand_blue
-if you did not activate right_gripper then do not drop_robot_right_hand_green
+if you did not activate right_gripper or you are sensing understack_cube_red then do not drop_robot_right_hand_red
+if you did not activate right_gripper or you are sensing understack_cube_blue then do not drop_robot_right_hand_blue
+if you did not activate right_gripper or you are sensing understack_cube_red then do not drop_robot_right_hand_green
 
 #conditions to impose a stack order
 infinitely often pickup_robot_right_hand_red

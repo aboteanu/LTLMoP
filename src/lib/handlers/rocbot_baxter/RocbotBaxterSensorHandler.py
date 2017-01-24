@@ -19,7 +19,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 
 		object_id (string) : object message id
 		'''
-		for k in range(50):
+		for k in range(20):
 		#for k in range(10):
                         #print 'handle state_model_msg_t'
 			self.RocbotBaxterInitHandler.lc_sensor.handle()
@@ -49,13 +49,14 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		'''
 		if initial:
 			return False
+
 		object_id = object_ids[0]
 		x = self.match_object( object_id )
 
 		if x:
 			obj_id1, sb1 = x
 			position1 = sb1.pose.position
-			for k in range(50):
+			for k in range(20):
 				self.RocbotBaxterInitHandler.lc_sensor.handle()
 				if 'cube' not in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
 					continue
@@ -67,7 +68,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 					if stacked:
 						print "stacked true" + sb2.id
 						return True
-		return True
+		return False
 
 	def sensor_type_understack( self, object_ids, initial=False ):
 		'''
@@ -76,13 +77,14 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		'''
 		if initial:
 			return False
+
 		object_id = object_ids[0]
 		x = self.match_object( object_id )
 
 		if x:
 			obj_id1, sb1 = x
 			position1 = sb1.pose.position
-			for k in range(50):
+			for k in range(20):
 				self.RocbotBaxterInitHandler.lc_sensor.handle()
 				if 'cube' not in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
 					continue
@@ -94,6 +96,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 					if stacked:
 						print "under stack true" + sb2.id
 						return True
+		return False
 
 	def sensor_type_clear(self, object_ids, max_thr=1.0, initial=False):
 		"""
@@ -110,7 +113,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			obj_id1, sb1 = x
 			position1 = sb1.pose.position
 
-			for k in range(50):
+			for k in range(20):
 				self.RocbotBaxterInitHandler.lc_sensor.handle()
 				if 'lid' not in self.RocbotBaxterInitHandler.s_msg.id or object_id==self.RocbotBaxterInitHandler.s_msg.id:
 					continue
@@ -242,5 +245,5 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 		elif test == 'above': 
 			return ( abs( x1 - x2 ) < min_threshold ) and ( abs( y1 -y2 ) < min_threshold ) and ( ( z2 - z1 ) > 0 ) and ( ( z2 - z1 ) < max_threshold ) 
 		elif test == 'under': 
-			return ( abs( x1 - x2 ) < min_threshold ) and ( abs( y1 -y2 ) < min_threshold ) and ( ( z2 - z1 ) > 0 ) and ( ( z1 - z2 ) < max_threshold ) 
+			return ( abs( x1 - x2 ) < min_threshold ) and ( abs( y1 -y2 ) < min_threshold ) and ( ( z1 - z2 ) > 0 ) and ( ( z1 - z2 ) < max_threshold ) 
 		return False

@@ -528,7 +528,7 @@ class SpecCompiler(object):
         classpath = delim.join([os.path.join(jtlv_path, "jtlv-prompt1.4.0.jar"),
                                 os.path.join(jtlv_path, "GROne")])
 
-        cmd = ["java", "-ea", "-Xmx512m", "-cp", classpath, module, self.proj.getFilenamePrefix() + ".smv", self.proj.getFilenamePrefix() + ".ltl"]
+        cmd = ["java", "-ea", "-Xmx4096m", "-cp", classpath, module, self.proj.getFilenamePrefix() + ".smv", self.proj.getFilenamePrefix() + ".ltl"]
         
         
         if refine:
