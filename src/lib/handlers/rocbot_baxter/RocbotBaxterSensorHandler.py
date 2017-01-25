@@ -66,7 +66,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 					x2,y2,z2 = position2.data
 					stacked = self.test_spatial_relation( position1, position2, test="above", min_threshold=0.1, max_threshold=0.3)  
 					if stacked:
-						print "stacked true" + sb2.id
+						print "stacked true" + object_id
 						return True
 		return False
 
@@ -94,7 +94,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 					x2,y2,z2 = position2.data
 					stacked = self.test_spatial_relation( position1, position2, test="under", min_threshold=0.1, max_threshold=0.3)  
 					if stacked:
-						print "under stack true" + sb2.id
+						print "understack " + object_id
 						return True
 		return False
 
@@ -207,7 +207,7 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 				if obj_id in self.RocbotBaxterInitHandler.processed_objects:
 					continue
 				self.RocbotBaxterInitHandler.observed_objects.add( obj_id )
-                                #print 'obseverd ' + object_id
+                                print 'obseverd ' + object_id
 				return True
 		return False
 
@@ -242,8 +242,8 @@ class RocbotBaxterSensorHandler(handlerTemplates.SensorHandler):
 			return ( y1-min_threshold < y2+offset ) and ( y1+max_threshold > y2+offset )
 		elif test == 'near':
 			return ( self.distance_coord( (x1,y1,z1), (x2,y2,z2)) <= max_threshold ) 
-		elif test == 'above': 
-			return ( abs( x1 - x2 ) < min_threshold ) and ( abs( y1 -y2 ) < min_threshold ) and ( ( z2 - z1 ) > 0 ) and ( ( z2 - z1 ) < max_threshold ) 
 		elif test == 'under': 
+			return ( abs( x1 - x2 ) < min_threshold ) and ( abs( y1 -y2 ) < min_threshold ) and ( ( z2 - z1 ) > 0 ) and ( ( z2 - z1 ) < max_threshold ) 
+		elif test == 'above': 
 			return ( abs( x1 - x2 ) < min_threshold ) and ( abs( y1 -y2 ) < min_threshold ) and ( ( z1 - z2 ) > 0 ) and ( ( z1 - z2 ) < max_threshold ) 
 		return False

@@ -42,6 +42,8 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 
 			#assert object_id is not None # fail if nothing is found
 
+			print action_type, object_ids
+
 			# now send the action message
 			action_msg = action_msg_t()
 			action_msg.required_gripper = gripper
