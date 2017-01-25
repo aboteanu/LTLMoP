@@ -41,8 +41,7 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			action_msg.param_num = 1
 			action_type_str = ltl_h2sl_symbols.action_types[ action_type ][1]
 			action_msg.params = list()
-			#action_msg.params.append( ( action_type_str, object_id ) )
-			action_msg.params = object_ids
+			action_msg.params.append( (action_type_str, object_id) )
 
 			# wait for 2s for the scene to settle 
 			time.sleep(2)
