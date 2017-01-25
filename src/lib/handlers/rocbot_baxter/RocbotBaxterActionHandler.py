@@ -28,16 +28,7 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			if action_type=="help":
 				#TODO generate feedback
 				pass
-			object_id = None
-			# first decide which object is withing reach
-			#if len( object_ids ) > 1:
-			#	for x in object_ids:
-			#		if x in self.RocbotBaxterInitHandler.observed_objects:
-			#			object_id = x 
-			#			break
-			#		
-			#else:
-			#	object_id = object_ids[0] 
+
 			object_id = object_ids[1] 
 
 			#assert object_id is not None # fail if nothing is found
@@ -50,7 +41,8 @@ class RocbotBaxterActionHandler(handlerTemplates.ActuatorHandler):
 			action_msg.param_num = 1
 			action_type_str = ltl_h2sl_symbols.action_types[ action_type ][1]
 			action_msg.params = list()
-			action_msg.params.append( ( action_type_str, object_id ) )
+			#action_msg.params.append( ( action_type_str, object_id ) )
+			action_msg.params = object_ids
 
 			# wait for 2s for the scene to settle 
 			time.sleep(2)
