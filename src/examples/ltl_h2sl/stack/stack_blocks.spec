@@ -56,9 +56,9 @@ if you are not sensing observed_cube_green or you are sensing understack_cube_gr
 #place on another block only if it is clear
 if you did not activate right_gripper or you are sensing understack_cube_red then do not drop_robot_right_hand_red
 if you did not activate right_gripper or you are sensing understack_cube_blue then do not drop_robot_right_hand_blue
-if you did not activate right_gripper or you are sensing understack_cube_red then do not drop_robot_right_hand_green
+if you did not activate right_gripper or you are sensing understack_cube_green then do not drop_robot_right_hand_green
 
 #conditions to impose a stack order
-infinitely often pickup_robot_right_hand_blue
+infinitely often pickup_robot_right_hand_red
 infinitely often drop_robot_right_hand_green
 
